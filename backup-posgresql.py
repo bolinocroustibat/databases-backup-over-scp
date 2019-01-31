@@ -5,20 +5,18 @@
 #              SETTINGS               #
 #######################################
 
-#### PostgreSQL database details to which backup to be done. Make sure below user having enough privileges to take databases backup.
-DB_HOST = 'localhost'
-DB_USER = 'postgres'
-# DB_USER_PASSWORD = '' # Useless here as we use superuser 'postgres'
+#### PostgreSQL database details to which backup to be done.
+DB_USER = 'postgres' # make sure this user having enough privileges to take all databases backup.
 DB_NAMES = ['db1_name','db2_name']
 
 ### Local setting
-LOCAL_PATH = '/root/backup-sql/' # full local path where dumps will be saved
-LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file
+LOCAL_PATH = '/root/backup-sql/' # full local path where dumps will be saved.
+LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file.
 
 ### Remote settings
 REMOTE_URL = '255.255.255.255'
-REMOTE_USER = 'root' # you need to be authorized on remote with your user SSH keys
-REMOTE_PATH = '/root/backup-sql/' # full remote path where dumps will be saved
+REMOTE_USER = 'root' # you need to be authorized on remote with your user SSH keys.
+REMOTE_PATH = '/root/backup-sql/' # full remote path where dumps will be saved.
 
 
 #######################################
@@ -69,10 +67,15 @@ except :
 scp = SCPClient(ssh.get_transport()) # Initiates distant file transfer (SCPClient takes a paramiko transport as its only argument)
 try:
 	for db in DB_NAMES:
-		print(logtime() + ": Reading " + db + "...\n")
-		dumpcmd = "su postgres && pg_dump -U " + DB_USER + " " + db + " > " + TODAY_LOCAL_PATH + "/" + db + ".sql"
-		os.system(dumpcmd)
-		print(logtime() + ": Backup file " + db + ".sql has been saved locally.\n")
+		### Backup locally
+		try:
+			print(logtime() + ": Reading " + db + "...\n")
+			dumpcmd = 'su -c "pg_dump ' + db + ' > ' + TODAY_LOCAL_PATH + '/' + db + '.sql" ' + DB_USER
+			os.system(dumpcmd)
+			print(logtime() + ": Backup file " + db + ".sql has been saved locally.\n")
+		except Exception as e:
+				print(logtime() + ": Error while trying to dump the database locally.\n")
+				print(e + "\n")
 		### Copy on remote
 		try:
 			scp.put(TODAY_LOCAL_PATH + "/" + db + ".sql", TODAY_REMOTE_PATH + "/" + db + ".sql")
