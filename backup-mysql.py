@@ -2,7 +2,7 @@
 ###########################################################
 # This python script is used for MySQL databases backup
 # using mysqldump utility, Paramiko/SSHClient and Paramiko/SCPClient
-# Last modified: Jan 17, 2018 by bolino (http://adriencarpentier.com)
+# Last modified: Jan 31, 2019 by bolino (http://adriencarpentier.com)
 ##########################################################
 
 
@@ -11,14 +11,13 @@
 #########################################
 
 #### MySQL database details to which backup to be done. Make sure below user having enough privileges to take databases backup. 
-DB_HOST = 'localhost'
 DB_USER = ''
 DB_USER_PASSWORD = ''
-DB_NAMES = [] # list of databases names (strings separated by commas)
+DB_NAMES = ['db1_name','db2_name'] # list of databases names (strings separated by commas)
 
 ### Local setting
-LOCAL_PATH = '/home/backup-sql/dump/' # full local path where dumps will be saved
-LOGFILE = '/home/backup-sql/log-last.log' # full path to log file
+LOCAL_PATH = '/root/backup-sql/dump/' # full local path where dumps will be saved
+LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file
 
 ### Remote settings
 REMOTE_URL = ''

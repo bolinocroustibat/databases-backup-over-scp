@@ -1,4 +1,9 @@
 #!/usr/bin/python
+###########################################################
+# This python script is used for PostgreSQL databases backup
+# using pg_dump utility, Paramiko/SSHClient and Paramiko/SCPClient
+# Last modified: Jan 31, 2019 by bolino (http://adriencarpentier.com)
+##########################################################
 
 
 #######################################
@@ -6,7 +11,7 @@
 #######################################
 
 #### PostgreSQL database details to which backup to be done.
-DB_USER = 'postgres' # make sure this user having enough privileges to take all databases backup.
+SYSTEM_DB_ADMIN_USER = 'postgres' # make sure this user having enough privileges to take all databases backup.
 DB_NAMES = ['db1_name','db2_name']
 
 ### Local setting
@@ -14,9 +19,9 @@ LOCAL_PATH = '/root/backup-sql/' # full local path where dumps will be saved.
 LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file.
 
 ### Remote settings
-REMOTE_URL = '255.255.255.255'
-REMOTE_USER = 'root' # you need to be authorized on remote with your user SSH keys.
-REMOTE_PATH = '/root/backup-sql/' # full remote path where dumps will be saved.
+REMOTE_URL = ''
+REMOTE_USER = '' # you need to be authorized on remote with your user SSH keys.
+REMOTE_PATH = '/home/backup-sql/' # full remote path where dumps will be saved.
 
 
 #######################################
@@ -50,7 +55,7 @@ ssh.connect(REMOTE_URL, username=REMOTE_USER)
 
 ### Create local backup folder
 try:
-	os.system('su -c "mkdir -p' + TODAY_LOCAL_PATH + '" ' + DB_USER)
+	os.system('su -c "mkdir -p' + TODAY_LOCAL_PATH + '" ' + SYSTEM_DB_ADMIN_USER)
 	print(logtime() + ": Local backup folder " + TODAY_LOCAL_PATH + " created.\n")
 except:
 	print(logtime() + ": ### ERROR ### while creating local backup folder!\n")
@@ -68,7 +73,7 @@ scp = SCPClient(ssh.get_transport()) # Initiates distant file transfer (SCPClien
 for db in DB_NAMES:
 	try:
 		### Backup locally
-		dumpcmd = 'su -c "pg_dump ' + db + ' > ' + TODAY_LOCAL_PATH + '/' + db + '.sql" ' + DB_USER
+		dumpcmd = 'su -c "pg_dump ' + db + ' > ' + TODAY_LOCAL_PATH + '/' + db + '.sql" ' + SYSTEM_DB_ADMIN_USER
 		os.system(dumpcmd)
 		print(logtime() + ": Backup file " + db + ".sql has been saved locally.\n")
 		### Copy on remote
