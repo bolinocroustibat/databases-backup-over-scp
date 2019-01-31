@@ -1,22 +1,22 @@
 #!/usr/bin/python
 
 
-#########################################
-#               SETTINGS                #
-#########################################
+#######################################
+#              SETTINGS               #
+#######################################
 
 #### PostgreSQL database details to which backup to be done. Make sure below user having enough privileges to take databases backup.
 DB_HOST = 'localhost'
 DB_USER = 'postgres'
-DB_USER_PASSWORD = ''
-DB_NAMES = ['spie_batignolles',]
+# DB_USER_PASSWORD = '' # Useless here as we use superuser 'postgres'
+DB_NAMES = ['db1_name','db2_name']
 
 ### Local setting
 LOCAL_PATH = '/root/backup-sql/' # full local path where dumps will be saved
 LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file
 
 ### Remote settings
-REMOTE_URL = 'ns3029811.ip-91-121-65.eu'
+REMOTE_URL = '255.255.255.255'
 REMOTE_USER = 'root' # you need to be authorized on remote with your user SSH keys
 REMOTE_PATH = '/root/backup-sql/' # full remote path where dumps will be saved
 
@@ -80,7 +80,7 @@ try:
 		except:
 			print(logtime() + ": ### ERROR ### while tring to copy " + db + ".sql on the remote!\n")
 except:
-	print(logtime() + ": ### ERROR ### while backup!\n")
+	print(logtime() + ": ### ERROR ### while backuping!\n")
 scp.close()
 
 print(logtime() + ": Backup script completed.\n")
