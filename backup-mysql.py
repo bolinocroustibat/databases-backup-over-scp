@@ -73,20 +73,22 @@ except :
 
 ### Starting actual databases backup process
 scp = SCPClient(ssh.get_transport()) # Initiates distant file transfer (SCPClient takes a paramiko transport as its only argument)
-try:
-	for db in DB_NAMES:
-		print(logtime() + ": Reading " + db + "...\n")
+for db in DB_NAMES:
+	try:
+		### Backup locally
 		dumpcmd = "mysqldump -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + db + " > " + TODAY_LOCAL_PATH + "/" + db + ".sql"
 		os.system(dumpcmd)
 		print(logtime() + ": Backup file " + db + ".sql has been saved locally.\n")
-		### Copy on remote
 		try:
+			### Copy on remote
 			scp.put(TODAY_LOCAL_PATH + "/" + db + ".sql", TODAY_REMOTE_PATH + "/" + db + ".sql")
 			print(logtime() + ": Backup file " + db + ".sql has been copied on remote " + REMOTE_URL + ".\n")
-		except:
-			print(logtime() + ": ### ERROR ### while tring to copy " + db + ".sql on the remote!\n")	
-except:
-	print(logtime() + ": ### ERROR ### while backup!\n")
+		except Exception as e:
+			print(logtime() + ": ### ERROR ### while tring to copy " + db + ".sql on the remote!\n")
+			print(e + "\n")
+	except Exception as e:
+			print(logtime() + ": Error while trying to dump the database locally.\n")
+			print(e + "\n")
 scp.close()
 
 print(logtime() + ": Backup script completed.\n")

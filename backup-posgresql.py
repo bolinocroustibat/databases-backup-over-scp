@@ -50,7 +50,7 @@ ssh.connect(REMOTE_URL, username=REMOTE_USER)
 
 ### Create local backup folder
 try:
-	os.makedirs(TODAY_LOCAL_PATH)
+	os.system('su -c "mkdir -p' + TODAY_LOCAL_PATH + '" ' + DB_USER)
 	print(logtime() + ": Local backup folder " + TODAY_LOCAL_PATH + " created.\n")
 except:
 	print(logtime() + ": ### ERROR ### while creating local backup folder!\n")
@@ -65,25 +65,22 @@ except :
 
 ### Starting actual databases backup process
 scp = SCPClient(ssh.get_transport()) # Initiates distant file transfer (SCPClient takes a paramiko transport as its only argument)
-try:
-	for db in DB_NAMES:
+for db in DB_NAMES:
+	try:
 		### Backup locally
-		try:
-			print(logtime() + ": Reading " + db + "...\n")
-			dumpcmd = 'su -c "pg_dump ' + db + ' > ' + TODAY_LOCAL_PATH + '/' + db + '.sql" ' + DB_USER
-			os.system(dumpcmd)
-			print(logtime() + ": Backup file " + db + ".sql has been saved locally.\n")
-		except Exception as e:
-				print(logtime() + ": Error while trying to dump the database locally.\n")
-				print(e + "\n")
+		dumpcmd = 'su -c "pg_dump ' + db + ' > ' + TODAY_LOCAL_PATH + '/' + db + '.sql" ' + DB_USER
+		os.system(dumpcmd)
+		print(logtime() + ": Backup file " + db + ".sql has been saved locally.\n")
 		### Copy on remote
 		try:
 			scp.put(TODAY_LOCAL_PATH + "/" + db + ".sql", TODAY_REMOTE_PATH + "/" + db + ".sql")
 			print(logtime() + ": Backup file " + db + ".sql has been copied on remote " + REMOTE_URL + ".\n")
-		except:
+		except Exception as e:
 			print(logtime() + ": ### ERROR ### while tring to copy " + db + ".sql on the remote!\n")
-except:
-	print(logtime() + ": ### ERROR ### while backuping!\n")
+			print(e + "\n")
+	except Exception as e:
+			print(logtime() + ": Error while trying to dump the database locally.\n")
+			print(e + "\n")
 scp.close()
 
 print(logtime() + ": Backup script completed.\n")
