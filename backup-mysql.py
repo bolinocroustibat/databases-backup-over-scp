@@ -2,7 +2,7 @@
 ###########################################################
 # This python script is used for MySQL databases backup
 # using mysqldump utility, Paramiko/SSHClient and Paramiko/SCPClient
-# Last modified: Jan 31, 2019 by bolino (http://adriencarpentier.com)
+# Last modified: Jan 31, 2019 by bolino (https://adriencarpentier.com)
 ##########################################################
 
 
