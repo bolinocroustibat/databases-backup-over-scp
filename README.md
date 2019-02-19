@@ -15,7 +15,7 @@ Use it with a cron. Edit your root crontab with "crontab -e" and add those lines
 Don't forget to make your script executable with something like:
 
 ```sh
-chmod +x backup-mysql.py
+chmod +x backup-sql.py
 ```
 
 Also, don't forget to make the local backup folder writable by user www-data or whoever user is running the script.
@@ -24,5 +24,5 @@ Same on the distant server, don't forget to make the backup folder writable by t
 For PotsgreSQL, since it's the system DB_USER which will dumb the database, I would suggest to make him owning the backup folder:
 
 ```sh
-chown -R postgres:postgres backup-mysql
+chown -R postgres:postgres backup-sql
 ```
