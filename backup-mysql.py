@@ -26,8 +26,6 @@ LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file
 ### Import required Python libraries
 import os, sys, time
 from datetime import datetime
-from paramiko import SSHClient  # don't forget to "pip install paramiko" on OS
-from scp import SCPClient # don't forget to "pip install scp" on OS
 
 ### Open log file and redirects print to log file (https://stackoverflow.com/questions/2513479/redirect-prints-to-log-file)
 old_stdout = sys.stdout
@@ -41,12 +39,6 @@ def logtime():
 ### Getting current datetime and get full path names including datetime "2017-01-26--07-13-34".
 DATETIME = time.strftime('%Y-%m-%d--%H-%M-%S')
 TODAY_LOCAL_PATH = LOCAL_PATH + DATETIME
-
-### Connecting to backup server
-ssh = SSHClient()
-ssh.load_system_host_keys()
-ssh.connect(REMOTE_URL, username=REMOTE_USER)
-scp = SCPClient(ssh.get_transport()) # SCPCLient takes a paramiko transport as its only argument
 
 ### Create local backup folder
 try:
