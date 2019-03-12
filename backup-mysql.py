@@ -48,7 +48,6 @@ except:
 	print(logtime() + ": ### ERROR ### while creating local backup folder!\n")
 
 ### Starting actual databases backup process
-scp = SCPClient(ssh.get_transport()) # Initiates distant file transfer (SCPClient takes a paramiko transport as its only argument)
 for db in DB_NAMES:
 	try:
 		### Backup locally
@@ -58,7 +57,6 @@ for db in DB_NAMES:
 	except Exception as e:
 			print(logtime() + ": Error while trying to dump the database locally.\n")
 			print(e + "\n")
-scp.close()
 
 print(logtime() + ": Backup script completed.\n")
 
