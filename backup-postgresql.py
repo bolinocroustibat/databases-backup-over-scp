@@ -54,14 +54,6 @@ try:
 except:
 	print(logtime() + ": ### ERROR ### while creating local backup folder!\n")
 
-### Create remote backup folder
-try :
-	ssh.exec_command('mkdir -p ' + TODAY_REMOTE_PATH)
-	ssh.close
-	print(logtime() + ": Remote backup folder " + TODAY_REMOTE_PATH + " created on " + REMOTE_URL + "\n")
-except :
-	print(logtime() + ": ### ERROR ### while creating remote backup folder" + TODAY_REMOTE_PATH + " on " + REMOTE_URL + "\n")
-
 ### Starting actual databases backup process
 scp = SCPClient(ssh.get_transport()) # Initiates distant file transfer (SCPClient takes a paramiko transport as its only argument)
 for db in DB_NAMES:
