@@ -15,7 +15,7 @@ SYSTEM_DB_ADMIN_USER = 'postgres' # make sure this user having enough privileges
 DB_NAMES = ['db1_name','db2_name']
 
 ### Local setting
-LOCAL_PATH = '/root/backup-sql/' # full local path where dumps will be saved.
+LOCAL_PATH = '/root/backup-sql/' # full local path where dumps will be saved, with trailing slash.
 LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file.
 
 
