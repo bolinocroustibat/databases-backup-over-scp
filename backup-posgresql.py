@@ -18,11 +18,6 @@ DB_NAMES = ['db1_name','db2_name']
 LOCAL_PATH = '/root/backup-sql/' # full local path where dumps will be saved.
 LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file.
 
-### Remote settings
-REMOTE_URL = ''
-REMOTE_USER = '' # you need to be authorized on remote with your user SSH keys.
-REMOTE_PATH = '/home/backup-sql/' # full remote path where dumps will be saved.
-
 
 #######################################
 #               SCRIPT                #
@@ -46,7 +41,6 @@ def logtime():
 ### Getting current datetime and get full path names including datetime "2017-01-26--07-13-34".
 DATETIME = time.strftime('%Y-%m-%d--%H-%M-%S')
 TODAY_LOCAL_PATH = LOCAL_PATH + DATETIME
-TODAY_REMOTE_PATH = REMOTE_PATH + DATETIME
 
 ### Connecting to backup server
 ssh = SSHClient()
@@ -76,13 +70,6 @@ for db in DB_NAMES:
 		dumpcmd = 'su -c "pg_dump ' + db + ' > ' + TODAY_LOCAL_PATH + '/' + db + '.sql" ' + SYSTEM_DB_ADMIN_USER
 		os.system(dumpcmd)
 		print(logtime() + ": Backup file " + db + ".sql has been saved locally.\n")
-		### Copy on remote
-		try:
-			scp.put(TODAY_LOCAL_PATH + "/" + db + ".sql", TODAY_REMOTE_PATH + "/" + db + ".sql")
-			print(logtime() + ": Backup file " + db + ".sql has been copied on remote " + REMOTE_URL + ".\n")
-		except Exception as e:
-			print(logtime() + ": ### ERROR ### while tring to copy " + db + ".sql on the remote!\n")
-			print(e + "\n")
 	except Exception as e:
 			print(logtime() + ": Error while trying to dump the database locally.\n")
 			print(e + "\n")
