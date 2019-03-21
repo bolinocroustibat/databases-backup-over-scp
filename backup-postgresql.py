@@ -24,17 +24,11 @@ sys.stdout = log_file
 def logtime():
 	return(datetime.utcnow().strftime('%d/%m %H:%M:%S/%f')[:17])
 
-## Getting current datetime and get full path names including datetime "2017-01-26--07-13-34".
+## Getting current datetime for building full path names including datetime "2017-01-26--07-13-34".
 DATETIME = time.strftime('%Y-%m-%d--%H-%M-%S')
-TODAY_LOCAL_PATH = LOCAL_PATH + DATETIME
-TODAY_REMOTE_PATH = REMOTE_PATH + DATETIME
-
-## Connecting to backup server
-ssh = SSHClient()
-ssh.load_system_host_keys()
-ssh.connect(REMOTE_URL, username=REMOTE_USER)
 
 ## Create local backup folder
+TODAY_LOCAL_PATH = LOCAL_PATH + DATETIME
 try:
 	os.system('su -c "mkdir -p' + TODAY_LOCAL_PATH + '" ' + SYSTEM_DB_ADMIN_USER)
 	print(logtime() + ": Local backup folder " + TODAY_LOCAL_PATH + " created.\n")
@@ -42,12 +36,18 @@ except:
 	print(logtime() + ": ### ERROR ### while creating local backup folder!\n")
 
 ### Create remote backup folder
-try :
-	ssh.exec_command('mkdir -p ' + TODAY_REMOTE_PATH)
-	ssh.close
-	print(logtime() + ": Remote backup folder " + TODAY_REMOTE_PATH + " created on " + REMOTE_URL + "\n")
-except :
-	print(logtime() + ": ### ERROR ### while creating remote backup folder" + TODAY_REMOTE_PATH + " on " + REMOTE_URL + "\n")
+if REMOTE_PATH and REMOTE_PATH != '':
+	TODAY_REMOTE_PATH = REMOTE_PATH + DATETIME
+	## Connecting to backup server
+	ssh = SSHClient()
+	ssh.load_system_host_keys()
+	ssh.connect(REMOTE_URL, username=REMOTE_USER)
+	try :
+		ssh.exec_command('mkdir -p ' + TODAY_REMOTE_PATH)
+		ssh.close
+		print(logtime() + ": Remote backup folder " + TODAY_REMOTE_PATH + " created on " + REMOTE_URL + "\n")
+	except :
+		print(logtime() + ": ### ERROR ### while creating remote backup folder" + TODAY_REMOTE_PATH + " on " + REMOTE_URL + "\n")
 
 ## Starting actual databases backup process
 scp = SCPClient(ssh.get_transport()) # Initiates distant file transfer (SCPClient takes a paramiko transport as its only argument)
@@ -56,14 +56,15 @@ for db in POSTGRES_DB_NAMES:
 		## Backup locally
 		dumpcmd = 'su -c "pg_dump ' + db + ' > ' + TODAY_LOCAL_PATH + '/' + db + '.sql" ' + POSTGRES_SYSTEM_USER
 		os.system(dumpcmd)
-		print(logtime() + ": Backup file " + db + ".sql has been saved locally.\n")
-		###Copy on remote
-		try:
-			scp.put(TODAY_LOCAL_PATH + "/" + db + ".sql", TODAY_REMOTE_PATH + "/" + db + ".sql")
-			print(logtime() + ": Backup file " + db + ".sql has been copied on remote " + REMOTE_URL + ".\n")
-		except Exception as e:
-			print(logtime() + ": ### ERROR ### while tring to copy " + db + ".sql on the remote!\n")
-			print(e + "\n")
+		print(logtime() + ": Backup dump file " + db + ".sql has been saved locally.\n")
+		## Copy on remote
+		if REMOTE_PATH and REMOTE_PATH != '':
+			try:
+				scp.put(TODAY_LOCAL_PATH + "/" + db + ".sql", TODAY_REMOTE_PATH + "/" + db + ".sql")
+				print(logtime() + ": Backup file " + db + ".sql has been copied on remote " + REMOTE_URL + ".\n")
+			except Exception as e:
+				print(logtime() + ": ### ERROR ### while tring to copy " + db + ".sql on the remote!\n")
+				print(e + "\n")
 	except Exception as e:
 			print(logtime() + ": ### ERROR ### while trying to dump the database locally.\n")
 			print(e + "\n")
