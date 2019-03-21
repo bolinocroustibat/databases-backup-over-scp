@@ -2,30 +2,15 @@
 ###########################################################
 # This python script is used for PostgreSQL databases backup
 # using pg_dump utility, Paramiko/SSHClient and Paramiko/SCPClient
-# Last modified: Jan 31, 2019 by bolino (https://adriencarpentier.com)
+# Last modified: March 21st, 2019 by bolino (https://adriencarpentier.com)
 ##########################################################
 
-
-#######################################
-#              SETTINGS               #
-#######################################
-
-#### PostgreSQL database details to which backup to be done.
-SYSTEM_DB_ADMIN_USER = 'postgres' # make sure this user having enough privileges to take all databases backup.
-DB_NAMES = ['db1_name','db2_name']
-
-### Local setting
-LOCAL_PATH = '/root/backup-sql/' # full local path where dumps will be saved, with trailing slash.
-LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file.
-
-
-#######################################
-#               SCRIPT                #
-#######################################
 
 ### Import required Python libraries
 import os, sys, time
 from datetime import datetime
+### Import settings
+import .settings
 
 ### Open log file and redirects print to log file (https://stackoverflow.com/questions/2513479/redirect-prints-to-log-file)
 old_stdout = sys.stdout
