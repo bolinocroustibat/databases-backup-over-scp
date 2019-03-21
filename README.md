@@ -2,7 +2,7 @@ This two Python scripts are to be used for MySQL/PostgreSQL databases backups, u
 
 # Configuration
 
-Create a settings.py file with your settings, based on example_settings.py.
+Create a settings.py file for your settings, based on example_settings.py, and fill in the settings according to the comments. If you don't want to save remotely, leave the REMOTE_URL empty.
 
 Don't forget to make the local directory where the dumps will be saved (whose path is LOCAL_PATH in the settings file) writable by the user www-data or whoever user is running the script.
 For PostgreSQL, since it's the system user POSTGRES_SYSTEM_USER which will dump the database, I would suggest to make him owning the directory:
