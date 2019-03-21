@@ -2,27 +2,8 @@
 ###########################################################
 # This python script is used for MySQL databases backup
 # using mysqldump utility, Paramiko/SSHClient and Paramiko/SCPClient
-# Last modified: Jan 31, 2019 by bolino (https://adriencarpentier.com)
+# Last modified: March 21st, 2019 by bolino (https://adriencarpentier.com)
 ##########################################################
-
-
-#########################################
-#               SETTINGS                #
-#########################################
-
-#### MySQL database details to which backup to be done. Make sure below user having enough privileges to take databases backup. 
-DB_USER = ''
-DB_USER_PASSWORD = ''
-DB_NAMES = ['db1_name','db2_name'] # list of databases names (strings separated by commas)
-
-### Local setting
-LOCAL_PATH = '/root/backup-sql/dump/' # full local path where dumps will be saved
-LOGFILE = '/root/backup-sql/log-last-script.log' # full path to log file
-
-### Remote settings
-REMOTE_URL = ''
-REMOTE_USER = '' # you need to be authorized on remote with your user SSH keys
-REMOTE_PATH = '/home/backup-sql/' # full remote path where dumps will be saved
 
 
 #######################################
@@ -34,6 +15,9 @@ import os, sys, time
 from datetime import datetime
 from paramiko import SSHClient  # don't forget to "pip install paramiko" on OS
 from scp import SCPClient # don't forget to "pip install scp" on OS
+
+## Import settings
+from settings import MYSQL_DB_NAMES, MYSQL_USER, MYSQL_USER_PASSWORD, LOGFILE, LOCAL_PATH, REMOTE_PATH, REMOTE_URL, REMOTE_USER
 
 ### Open log file and redirects print to log file (https://stackoverflow.com/questions/2513479/redirect-prints-to-log-file)
 old_stdout = sys.stdout
@@ -72,10 +56,10 @@ except :
 
 ### Starting actual databases backup process
 scp = SCPClient(ssh.get_transport()) # Initiates distant file transfer (SCPClient takes a paramiko transport as its only argument)
-for db in DB_NAMES:
+for db in MYSQL_DB_NAMES:
 	try:
 		### Backup locally
-		dumpcmd = "mysqldump -u " + DB_USER + " -p" + DB_USER_PASSWORD + " " + db + " > " + TODAY_LOCAL_PATH + "/" + db + ".sql"
+		dumpcmd = "mysqldump -u " + MYSQL_USER + " -p" + MYSQL_USER_PASSWORD + " " + db + " > " + TODAY_LOCAL_PATH + "/" + db + ".sql"
 		os.system(dumpcmd)
 		print(logtime() + ": Backup file " + db + ".sql has been saved locally.\n")
 		try:
@@ -86,7 +70,7 @@ for db in DB_NAMES:
 			print(logtime() + ": ### ERROR ### while tring to copy " + db + ".sql on the remote!\n")
 			print(e + "\n")
 	except Exception as e:
-			print(logtime() + ": Error while trying to dump the database locally.\n")
+			print(logtime() + ": ### ERROR ### while trying to dump the database locally.\n")
 			print(e + "\n")
 scp.close()
 
