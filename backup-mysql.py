@@ -1,12 +1,6 @@
 #!/usr/bin/python
-###########################################################
-# This python script is used for MySQL databases backup
-# using mysqldump utility, Paramiko/SSHClient and Paramiko/SCPClient
-# Last modified: March 21st, 2019 by bolino (https://adriencarpentier.com)
-##########################################################
 
-
-### Import required Python libraries
+## Import required Python libraries
 import os, sys, time
 from datetime import datetime
 from paramiko import SSHClient  # don't forget to "pip install paramiko" on OS
@@ -42,11 +36,11 @@ if REMOTE_PATH and REMOTE_PATH != '':
 	ssh = SSHClient()
 	ssh.load_system_host_keys()
 	ssh.connect(REMOTE_URL, username=REMOTE_USER)
-	try :
+	try:
 		ssh.exec_command('mkdir -p ' + TODAY_REMOTE_PATH)
 		ssh.close
 		print(logtime() + ": Remote backup folder " + TODAY_REMOTE_PATH + " created on " + REMOTE_URL + "\n")
-	except :
+	except:
 		print(logtime() + ": ### ERROR ### while creating remote backup folder" + TODAY_REMOTE_PATH + " on " + REMOTE_URL + "\n")
 
 ## Starting actual databases backup process
