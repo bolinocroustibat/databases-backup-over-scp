@@ -4,3 +4,5 @@
 *.sublime-workspace
 
 settings.py
+log-last-script.log
+log-last-cron.log
