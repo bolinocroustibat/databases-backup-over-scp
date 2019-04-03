@@ -24,7 +24,7 @@ DATETIME = time.strftime('%Y-%m-%d--%H-%M-%S')
 ## Create local backup folder
 TODAY_LOCAL_PATH = LOCAL_PATH + DATETIME
 try:
-	os.system('su -c "mkdir -p' + TODAY_LOCAL_PATH + '" ' + SYSTEM_DB_ADMIN_USER)
+	os.system('su -c "mkdir -p ' + TODAY_LOCAL_PATH + '" ' + POSTGRES_SYSTEM_USER)
 	print(logtime() + ": Local backup folder " + TODAY_LOCAL_PATH + " created.\n")
 except:
 	print(logtime() + ": ### ERROR ### while creating local backup folder!\n")
