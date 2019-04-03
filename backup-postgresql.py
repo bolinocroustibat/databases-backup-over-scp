@@ -29,13 +29,14 @@ try:
 except:
 	print(logtime() + ": ### ERROR ### while creating local backup folder!\n")
 
-### Create remote backup folder
+### Init connection to remote and create remote backup folder
 if REMOTE_PATH and REMOTE_PATH != '':
 	TODAY_REMOTE_PATH = REMOTE_PATH + DATETIME
 	## Connecting to backup server
 	ssh = SSHClient()
 	ssh.load_system_host_keys()
 	ssh.connect(REMOTE_URL, username=REMOTE_USER)
+	scp = SCPClient(ssh.get_transport()) # Also initiates distant file transfer (SCPClient takes a paramiko transport as its only argument) for later copy
 	try:
 		ssh.exec_command('mkdir -p ' + TODAY_REMOTE_PATH)
 		ssh.close
@@ -44,7 +45,6 @@ if REMOTE_PATH and REMOTE_PATH != '':
 		print(logtime() + ": ### ERROR ### while creating remote backup folder" + TODAY_REMOTE_PATH + " on " + REMOTE_URL + "\n")
 
 ## Starting actual databases backup process
-scp = SCPClient(ssh.get_transport()) # Initiates distant file transfer (SCPClient takes a paramiko transport as its only argument)
 for db in POSTGRES_DB_NAMES:
 	try:
 		## Backup locally
