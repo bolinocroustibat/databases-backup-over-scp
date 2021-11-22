@@ -1,4 +1,4 @@
-This two Python scripts are to be used for MySQL/PostgreSQL databases backups, using Python3, mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
+Those two Python scripts are to be used for MySQL/PostgreSQL databases backups, using Python3, mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
 
 # Configuration
 
@@ -6,7 +6,6 @@ Create a `settings.py` file for your settings, based on `example_settings.py`, a
 
 Don't forget to make the local directory where the dumps will be saved (whose path is `LOCAL_PATH` in the settings file) writable by the user www-data or whoever user is running the script.
 For PostgreSQL, since it's the system user `POSTGRES_SYSTEM_USER` which will dump the database, I suggest to make the PostgreSQL user owning the directory:
-
 ```sh
 chown -R postgres:postgres /root/dumps/
 ```
@@ -16,19 +15,25 @@ Same on the distant server, don't forget to make the backup folder (whose path i
 
 # Run
 
-Use [Poetry](https://python-poetry.org/) to run it, with:
+Use [Poetry](https://python-poetry.org/) or [PDM](https://pdm.fming.dev/) to run it, with:
 
 MySQL:
 ```sh
 poetry run backup-mysql.py
+```
+```sh
+pdm run backup-mysql.py
 ```
 
 PostgreSQL:
 ```sh
 poetry run backup-postgresql.py
 ```
+```sh
+pdm run backup-postgresql.py
+```
 
-Otherwise, create a virtual environement, install `paramiko`and `scp`, activate it and run:
+Otherwise, create a virtual environement, install `paramiko`and `scp` Python packages, activate it and run:
 
 MySQL:
 ```sh
@@ -43,7 +48,7 @@ PostgreSQL:
 
 # Run with a cron
 
-You can use the scripts with a cron. Edit your root crontab with `crontab -e` and add those lines, for example:
+You can use the scripts with a Linux cron. Edit your root crontab with `crontab -e` and add those lines, for example:
 
 ```
 # Backup MySQL databases every Tuesday and Friday at 3:00

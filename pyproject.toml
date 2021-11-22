@@ -11,6 +11,24 @@ scp = "^0.14.1"
 
 [tool.poetry.dev-dependencies]
 
+
+[tool.pdm]
+includes = []
+[tool.pdm.dev-dependencies]
+dev = []
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"
+
+[project]
+name = "databases-backup-script-over-scp"
+version = "0.1.0"
+description = ""
+authors = [{ name = "Adrien Carpentier", email = "moi@adriencarpentier.com" }]
+dependencies = ["paramiko<3.0.0,>=2.7.2", "scp<1.0.0,>=0.14.1"]
+requires-python = ">=3.6,<4.0"
+dynamic = ["classifiers", "classifiers"]
+license = { text = "MIT" }
+
+[project.urls]
+homepage = ""

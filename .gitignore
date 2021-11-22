@@ -145,6 +145,10 @@ dmypy.json
 # Poetry
 poetry.lock
 
+# PDM
+.pdm.toml
+pdm.lock
+
 *.egg-info
 .coverage
 .ipynb_checkpoints
