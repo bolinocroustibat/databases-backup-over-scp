@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 
-from logger import TODAY_LOCAL_PATH, FileLogger
-from remote import remote_backup
+from helpers.logger import TODAY_LOCAL_PATH, FileLogger
+from helpers.remote import remote_backup
 from settings import POSTGRES_DB_NAMES, POSTGRES_SYSTEM_USER, REMOTE_URL
 
 

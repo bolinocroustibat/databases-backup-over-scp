@@ -1,9 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 
-from logger import TODAY_LOCAL_PATH, FileLogger
-from remote import remote_backup
+from helpers.logger import TODAY_LOCAL_PATH, FileLogger
+from helpers.remote import remote_backup
 from settings import MYSQL_DB_NAMES, MYSQL_USER, MYSQL_USER_PASSWORD, REMOTE_URL
 
 

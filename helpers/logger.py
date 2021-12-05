@@ -1,10 +1,9 @@
-import sys, time
 from datetime import datetime
 
 from settings import LOGFILE, LOCAL_PATH, REMOTE_PATH
 
 
-today_string = time.strftime("%Y-%m-%d--%H-%M-%S")
+today_string = datetime.utcnow().strftime("%Y-%m-%d--%H-%M-%S")
 TODAY_LOCAL_PATH = LOCAL_PATH + today_string
 TODAY_REMOTE_PATH = REMOTE_PATH + today_string
 

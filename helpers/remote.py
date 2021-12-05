@@ -1,7 +1,7 @@
 from paramiko import SSHClient
 from scp import SCPClient
 
-from logger import TODAY_LOCAL_PATH, TODAY_REMOTE_PATH
+from helpers.logger import TODAY_LOCAL_PATH, TODAY_REMOTE_PATH
 from settings import REMOTE_URL, REMOTE_USER, REMOTE_PATH
 
 
