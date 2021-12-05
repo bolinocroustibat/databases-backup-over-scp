@@ -10,8 +10,8 @@ MYSQL_USER = (
 MYSQL_USER_PASSWORD = ""
 
 ## Local setting
-LOCAL_PATH = "/root/databases-backup-script-over-scp/dumps/"  # full local path where dumps will be saved, with trailing slash.
-LOGFILE = "/root/databases-backup-script-over-scp/log-last-script.log"  # full path to log file.
+LOCAL_PATH = "/root/databases-backup-over-scp/dumps/"  # full local path where dumps will be saved, with trailing slash.
+LOGFILE = "/root/databases-backup-over-scp/log-last-script.log"  # full path to log file.
 
 ### Remote settings
 REMOTE_URL = ""  # leave blank if you don't want to save remotely.

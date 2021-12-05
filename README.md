@@ -2,7 +2,7 @@ Those two Python scripts are to be used for MySQL/PostgreSQL databases backups, 
 
 # Configuration
 
-Create a `settings.py` file for your settings, based on `example_settings.py`, and fill in the settings according to the comments. If you don't want to save remotely, leave the `REMOTE_URL` empty.
+Create a `settings.py` file for your settings, based on `settings_example.py`, and fill in the settings according to the comments. If you don't want to save remotely, leave the `REMOTE_URL` empty.
 
 Don't forget to make the local directory where the dumps will be saved (whose path is `LOCAL_PATH` in the settings file) writable by the user www-data or whoever user is running the script.
 For PostgreSQL, since it's the system user `POSTGRES_SYSTEM_USER` which will dump the database, I suggest to make the PostgreSQL user owning the directory:
@@ -15,7 +15,19 @@ Same on the distant server, don't forget to make the backup folder (whose path i
 
 # Run
 
-Use [Poetry](https://python-poetry.org/) or [PDM](https://pdm.fming.dev/) to run it, with:
+Create a virtual environement, activate it, install `paramiko` and `scp` Python packages inside it, and run:
+
+MySQL:
+```sh
+python3 backup-mysql.py
+```
+
+PostgreSQL:
+```sh
+python3 backup-postgresql.py
+```
+
+Or use [Poetry](https://python-poetry.org/) or [PDM](https://pdm.fming.dev/) to run it, with:
 
 MySQL:
 ```sh
@@ -25,26 +37,6 @@ poetry run backup-mysql.py
 pdm run backup-mysql.py
 ```
 
-PostgreSQL:
-```sh
-poetry run backup-postgresql.py
-```
-```sh
-pdm run backup-postgresql.py
-```
-
-Otherwise, create a virtual environement, install `paramiko`and `scp` Python packages, activate it and run:
-
-MySQL:
-```sh
-./backup-mysql.py
-```
-
-PostgreSQL:
-```sh
-./backup-postgresql.py
-```
-
 
 # Run with a cron
 
@@ -52,12 +44,12 @@ You can use the scripts with a Linux cron. Edit your root crontab with `crontab 
 
 ```
 # Backup MySQL databases every Tuesday and Friday at 3:00
-0 3 * * 2,5 python3 /root/backup-sql/backup-mysql.py > /root/backup-sql/log-last-cron.log
+0 3 * * 2,5 python3 /root/database-backup-over-scp/backup-mysql.py > /root/database-backup-over-scp/log-last-cron.log
 ```
 or/and:
 ```
 # Backup PostgreSQL databases every Monday and Thursday at 6:00
-0 6 * * 1,4 python3 /root/backup-sql/backup-postgresql.py > /root/backup-sql/log-last-cron.log
+0 6 * * 1,4 python3 /root/database-backup-over-scp/backup-postgresql.py > /root/database-backup-over-scp/log-last-cron.log
 ```
 
 In this case, don't forget to make your script executable by your cron user, with something like this as your cron user:
