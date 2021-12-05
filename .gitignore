@@ -148,6 +148,7 @@ poetry.lock
 # PDM
 .pdm.toml
 pdm.lock
+__pypackages__/
 
 *.egg-info
 .coverage

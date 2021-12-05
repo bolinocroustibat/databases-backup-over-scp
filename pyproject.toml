@@ -5,7 +5,6 @@ description = "Two Python scripts for remote backups of MySQL and PostgreSQL dat
 authors = [{ name = "Adrien Carpentier", email = "moi@adriencarpentier.com" }]
 dependencies = ["paramiko<3.0.0,>=2.7.2", "scp<1.0.0,>=0.14.1"]
 requires-python = ">=3.6,<4.0"
-dynamic = ["classifiers", "classifiers"]
 license = { text = "MIT" }
 
 [project.urls]

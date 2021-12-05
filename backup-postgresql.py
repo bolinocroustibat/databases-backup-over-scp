@@ -1,125 +1,38 @@
 #!/usr/bin/python
 
-## Import required Python libraries
-import os, sys, time
-from datetime import datetime
-from paramiko import SSHClient  # don't forget to "pip install paramiko" on OS
-from scp import SCPClient  # don't forget to "pip install scp" on OS
+import os
 
-## Import settings
-from settings import (
-    POSTGRES_DB_NAMES,
-    POSTGRES_SYSTEM_USER,
-    LOGFILE,
-    LOCAL_PATH,
-    REMOTE_PATH,
-    REMOTE_URL,
-    REMOTE_USER,
-)
-
-## Open log file and redirects print to log file (https://stackoverflow.com/questions/2513479/redirect-prints-to-log-file)
-old_stdout = sys.stdout
-log_file = open(LOGFILE, "w")
-sys.stdout = log_file
-
-## Function to have readable millisecond time in log file
-def logtime():
-    return datetime.utcnow().strftime("%d/%m %H:%M:%S/%f")[:17]
+from logger import TODAY_LOCAL_PATH, FileLogger
+from remote import remote_backup
+from settings import POSTGRES_DB_NAMES, POSTGRES_SYSTEM_USER, REMOTE_URL
 
 
-## Getting current datetime for building full path names including datetime "2017-01-26--07-13-34".
-DATETIME = time.strftime("%Y-%m-%d--%H-%M-%S")
+logger = FileLogger()
 
-## Create local backup folder
-TODAY_LOCAL_PATH = LOCAL_PATH + DATETIME
+# Create local backup folder
 try:
-    os.system('su -c "mkdir -p ' + TODAY_LOCAL_PATH + '" ' + POSTGRES_SYSTEM_USER)
-    print(logtime() + ": Local backup folder " + TODAY_LOCAL_PATH + " created.\n")
+    os.system(f'su -c "mkdir -p {TODAY_LOCAL_PATH}" {POSTGRES_SYSTEM_USER}')
+    logger.log(f"Local backup folder {TODAY_LOCAL_PATH} created.")
 except:
-    print(logtime() + ": ### ERROR ### while creating local backup folder\n")
+    logger.log(f"### ERROR ### while creating local backup folder: {str(e)}")
 
-## Local backup
+# Local backup
 for db in POSTGRES_DB_NAMES:
     try:
-        dumpcmd = (
-            'su -c "pg_dump '
-            + db
-            + " > "
-            + TODAY_LOCAL_PATH
-            + "/"
-            + db
-            + '.sql" '
-            + POSTGRES_SYSTEM_USER
+        dump_cmd = (
+            f'su -c "pg_dump {db} > {TODAY_LOCAL_PATH}/{db}.sql" {POSTGRES_SYSTEM_USER}'
         )
-        os.system(dumpcmd)
-        print(logtime() + ": Backup dump file " + db + ".sql has been saved locally.\n")
+        os.system(dump_cmd)
+        logger.log(f"Backup dump file {db}.sql has been saved locally.")
     except Exception as e:
-        print(
-            logtime()
-            + ": ### ERROR ### while trying to dump the database "
-            + db
-            + " locally\n"
+        logger.log(
+            f"### ERROR ### while trying to dump the database {db} locally: {str(e)}"
         )
-        print(e + "\n")
 
-## Remote backup
-if REMOTE_PATH and REMOTE_PATH != "":
-    TODAY_REMOTE_PATH = REMOTE_PATH + DATETIME
-    ## Connecting to backup server
-    ssh = SSHClient()
-    ssh.load_system_host_keys()
-    ssh.connect(REMOTE_URL, username=REMOTE_USER)
-    ## Create remote backup folder
-    try:
-        ssh.exec_command("mkdir -p " + TODAY_REMOTE_PATH)
-        ssh.close
-        print(
-            logtime()
-            + ": Remote backup folder "
-            + TODAY_REMOTE_PATH
-            + " created on "
-            + REMOTE_URL
-            + "\n"
-        )
-    except:
-        print(
-            logtime()
-            + ": ### ERROR ### while creating remote backup folder"
-            + TODAY_REMOTE_PATH
-            + " on "
-            + REMOTE_URL
-            + "\n"
-        )
-    scp = SCPClient(
-        ssh.get_transport()
-    )  # Initiate distant file transfer (SCPClient takes a paramiko transport as its only argument)
-    ## Copy on remote
-    for db in POSTGRES_DB_NAMES:
-        try:
-            scp.put(
-                TODAY_LOCAL_PATH + "/" + db + ".sql",
-                TODAY_REMOTE_PATH + "/" + db + ".sql",
-            )
-            print(
-                logtime()
-                + ": Backup file "
-                + db
-                + ".sql has been copied on remote "
-                + REMOTE_URL
-                + ".\n"
-            )
-        except Exception as e:
-            print(
-                logtime()
-                + ": ### ERROR ### while tring to copy "
-                + db
-                + ".sql on the remote\n"
-            )
-            print(e + "\n")
-    scp.close()
+# Remote backup
+if REMOTE_URL:
+    remote_backup(db_names=POSTGRES_DB_NAMES, logger=logger)
 
-print(logtime() + ": Backup script completed.\n")
+logger.log("PostgreSQL backup script completed.")
 
-## Close log file
-sys.stdout = old_stdout
-log_file.close()
+logger.close()
