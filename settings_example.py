@@ -16,6 +16,6 @@ LOGFILE = (
 )
 
 # Remote settings
-REMOTE_URL = ""  # leave blank if you don't want to save remotely.
+REMOTE_HOST = ""  # leave blank if you don't want to save remotely.
 REMOTE_USER = ""  # you need to be authorized on remote with your user SSH keys.
 REMOTE_PATH = "/home/backup-sql/"  # full remote path where dumps will be saved.

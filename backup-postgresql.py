@@ -2,9 +2,10 @@
 
 import os
 
-from helpers.logger import TODAY_LOCAL_PATH, FileLogger
+from helpers.logger import FileLogger
+from helpers.paths import TODAY_LOCAL_PATH
 from helpers.remote import remote_backup
-from settings import POSTGRES_DB_NAMES, POSTGRES_SYSTEM_USER, REMOTE_URL
+from settings import POSTGRES_DB_NAMES, POSTGRES_SYSTEM_USER, REMOTE_HOST
 
 
 logger = FileLogger()
@@ -19,7 +20,7 @@ except:
 # Local backup
 for db in POSTGRES_DB_NAMES:
     try:
-        dump_cmd = (
+        dump_cmd: str = (
             f'su -c "pg_dump {db} > {TODAY_LOCAL_PATH}/{db}.sql" {POSTGRES_SYSTEM_USER}'
         )
         os.system(dump_cmd)
@@ -30,7 +31,7 @@ for db in POSTGRES_DB_NAMES:
         )
 
 # Remote backup
-if REMOTE_URL:
+if REMOTE_HOST:
     remote_backup(db_names=POSTGRES_DB_NAMES, logger=logger)
 
 logger.log("PostgreSQL backup script completed.")
