@@ -1,4 +1,6 @@
-Those two Python scripts are to be used for MySQL/PostgreSQL databases backups, using Python3, mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
+# Dependencies
+
+Those two Python scripts are to be used for MySQL/PostgreSQL databases backups, using Python3 (>=3.8), mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
 
 # Configuration
 
@@ -27,12 +29,9 @@ PostgreSQL:
 python3 backup-postgresql.py
 ```
 
-Or use [Poetry](https://python-poetry.org/) or [PDM](https://pdm.fming.dev/) to run it, with:
+Or use [PDM](https://pdm.fming.dev/) to run it, with:
 
 MySQL:
-```sh
-poetry run backup-mysql.py
-```
 ```sh
 pdm run backup-mysql.py
 ```

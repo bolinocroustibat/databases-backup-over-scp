@@ -26,6 +26,9 @@ Thumbs.db
 *.lib
 *.sbr
 
+# VScode
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -147,6 +150,7 @@ poetry.lock
 
 # PDM
 .pdm.toml
+.pdm-python
 pdm.lock
 __pypackages__/
 
@@ -163,6 +167,5 @@ __pycache__/
 # Project specific
 settings.py
 settings.pyc
-
 log-last-script.log
 log-last-cron.log

@@ -1,33 +1,25 @@
 [project]
 name = "databases-backup-over-scp"
-version = "0.1.2"
+version = "0.1.3"
 description = "Two Python scripts for remote backups of MySQL and PostgreSQL databases over SCP"
-authors = [{ name = "Adrien Carpentier", email = "moi@adriencarpentier.com" }]
-dependencies = ["paramiko<3.0.0,>=2.7.2", "scp<1.0.0,>=0.14.1"]
-requires-python = ">=3.6,<4.0"
+authors = [{ name = "Adrien Carpentier", email = "me@adriencarpentier.com" }]
+dependencies = [
+    "paramiko<4.0.0,>=3.0.0",
+    "scp<1.0.0,>=0.14.1"
+]
+requires-python = ">=3.8,<4.0"
 license = { text = "MIT" }
 
 [project.urls]
 homepage = ""
 
-[tool.poetry]
-name = "databases-backup-over-scp"
-version = "0.1.2"
-description = "Two Python scripts for remote backups of MySQL and PostgreSQL databases over SCP"
-authors = ["Adrien Carpentier <moi@adriencarpentier.com>"]
-
-[tool.poetry.dependencies]
-python = "^3.6"
-paramiko = "^2.10.1"
-scp = "^0.14.1"
-
-[tool.poetry.dev-dependencies]
-
-
 [tool.pdm]
 includes = []
 [tool.pdm.dev-dependencies]
-dev = []
+dev = [
+    "black>=23.3.0",
+    "ruff>=0.0.275",
+]
 [build-system]
 requires = ["pdm-pep517"]
 build-backend = "pdm.pep517.api"

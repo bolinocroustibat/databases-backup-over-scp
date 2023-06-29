@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import os
 
 from helpers.logger import FileLogger
@@ -14,7 +12,7 @@ logger = FileLogger()
 try:
     os.system(f'su -c "mkdir -p {TODAY_LOCAL_PATH}" {POSTGRES_SYSTEM_USER}')
     logger.log(f"Local backup folder {TODAY_LOCAL_PATH} created.")
-except:
+except Exception as e:
     logger.log(f"### ERROR ### while creating local backup folder: {str(e)}")
 
 # Local backup

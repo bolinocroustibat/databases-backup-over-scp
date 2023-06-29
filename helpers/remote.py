@@ -12,7 +12,9 @@ def remote_backup(db_names: list, logger) -> None:
         ssh.load_system_host_keys()
         ssh.connect(REMOTE_HOST, username=REMOTE_USER)
     except Exception as e:
-        logger.log(f"### ERROR ### while connecting to remote '{REMOTE_HOST}': {str(e)}")
+        logger.log(
+            f"### ERROR ### while connecting to remote '{REMOTE_HOST}': {str(e)}"
+        )
     else:
         # Create remote backup folder
         try:
@@ -23,10 +25,10 @@ def remote_backup(db_names: list, logger) -> None:
             )
         except Exception as e:
             logger.log(
-                f"### ERROR ### while creating remote backup folder '{TODAY_REMOTE_PATH}' on '{REMOTE_HOST}': {str(e)}"
+                f"### ERROR ### while creating remote backup folder '{TODAY_REMOTE_PATH}' on '{REMOTE_HOST}': {str(e)}"  # noqa E501
             )
         else:
-            # Initiate distant file transfer. SCPClient takes a paramiko transport as its only argument
+            # Initiate distant file transfer. SCPClient takes a paramiko transport as its only argument # noqa E501
             scp = SCPClient(ssh.get_transport())
             # Copy on remote
             for db in db_names:
@@ -39,6 +41,6 @@ def remote_backup(db_names: list, logger) -> None:
                     )
                 except Exception as e:
                     logger.log(
-                        f"### ERROR ### while copying '{db}.sql' on '{REMOTE_HOST}': {str(e)}"
+                        f"### ERROR ### while copying '{db}.sql' on '{REMOTE_HOST}': {str(e)}"  # noqa E501
                     )
             scp.close()

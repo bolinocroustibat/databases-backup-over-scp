@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import os
 
 from helpers.logger import FileLogger
@@ -20,7 +18,7 @@ except Exception as e:
 # Local backup
 for db in MYSQL_DB_NAMES:
     try:
-        dump_cmd: str = f"mysqldump --user={MYSQL_USER} --password={MYSQL_USER_PASSWORD} {db} > {TODAY_LOCAL_PATH}/{db}.sql"
+        dump_cmd: str = f"mysqldump --user={MYSQL_USER} --password={MYSQL_USER_PASSWORD} {db} > {TODAY_LOCAL_PATH}/{db}.sql"  # noqa E501
         os.system(dump_cmd)
         logger.log(f"Backup dump file {db}.sql has been saved locally.")
     except Exception as e:
