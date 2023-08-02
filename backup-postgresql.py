@@ -27,7 +27,8 @@ else:
 
     # Local backup
     for db in POSTGRES_DB_NAMES:
-        dump_cmd: str = f'su -c "pg_dump {db} > {TODAY_LOCAL_PATH}/{db}.dump" {POSTGRES_SYSTEM_USER}'  # noqa E501
+        db_filename: str = f"{db}.dump"
+        dump_cmd: str = f'su -c "pg_dump {db} > {TODAY_LOCAL_PATH}/{db_filename}" {POSTGRES_SYSTEM_USER}'  # noqa E501
         proc = subprocess.Popen(dump_cmd, shell=True)
         proc.wait()
         (stdout, stderr) = proc.communicate()
@@ -37,10 +38,10 @@ else:
                 f"Error while trying to dump the database {db} locally: {stderr.decode()}"  # noqa E501
             )
         else:
-            logger.success(f"Backup dump file {db}.sql has been saved locally.")
+            logger.success(f"Backup dump file '{db_filename}' has been saved locally.")
             # Remote backup
             if REMOTE_HOST:
-                remote_backup(db_names=POSTGRES_DB_NAMES, logger=logger)
+                remote_backup(db_filename=db_filename, logger=logger)
 
 logger.log("PostgreSQL backup script completed.")
 

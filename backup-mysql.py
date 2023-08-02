@@ -21,17 +21,18 @@ else:
     # Local backup
     for db in MYSQL_DB_NAMES:
         try:
-            dump_cmd: str = f"mysqldump --user={MYSQL_USER} --password={MYSQL_USER_PASSWORD} {db} > {TODAY_LOCAL_PATH}/{db}.sql"  # noqa E501
+            db_filename: str = f"{db}.sql"
+            dump_cmd: str = f"mysqldump --user={MYSQL_USER} --password={MYSQL_USER_PASSWORD} {db} > {TODAY_LOCAL_PATH}/{db_filename}"  # noqa E501
             os.system(dump_cmd)
         except Exception as e:
             logger.error(
                 f"Error while trying to dump the database '{db}' locally: {str(e)}"  # noqa E501
             )
         else:
-            logger.success(f"Backup dump file {db}.sql has been saved locally.")
+            logger.success(f"Backup file '{db_filename}' has been saved locally.")
             # Remote backup
             if REMOTE_HOST:
-                remote_backup(db_names=MYSQL_DB_NAMES, logger=logger)
+                remote_backup(db_filename=db_filename, logger=logger)
 
 logger.log("MySQL backup script completed.")
 
