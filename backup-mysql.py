@@ -23,7 +23,7 @@ logger = FileLogger()
 if POSTGRES_SYSTEM_USER:
     # If we have a postgre system user, we create the folder as owned by it
     # So it can also be writable by the postgresql script
-    cmd: str = f'su -c "mkdir -p {TODAY_LOCAL_PATH}" {POSTGRES_SYSTEM_USER}'
+    cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "mkdir -p {TODAY_LOCAL_PATH}"'
 else:
     cmd: str = f"mkdir -p {TODAY_LOCAL_PATH}"
 proc = subprocess.Popen(

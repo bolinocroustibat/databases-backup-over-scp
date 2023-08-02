@@ -15,7 +15,7 @@ logger = FileLogger()
 
 # Create local backup folder
 proc = subprocess.Popen(
-    f'su -c "mkdir -p {TODAY_LOCAL_PATH}" {POSTGRES_SYSTEM_USER}',
+    f'su - {POSTGRES_SYSTEM_USER} -c "mkdir -p {TODAY_LOCAL_PATH}"',
     shell=True,
     stdout=subprocess.PIPE,
     stderr=subprocess.PIPE,
@@ -34,7 +34,7 @@ else:
     # Local backup
     for db in POSTGRES_DB_NAMES:
         db_filename: str = f"{db}.dump"
-        dump_cmd: str = f'su -c "pg_dump {db} > {TODAY_LOCAL_PATH}/{db_filename}" {POSTGRES_SYSTEM_USER}'  # noqa E501
+        dump_cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "pg_dump {db} > {TODAY_LOCAL_PATH}/{db_filename}" '  # noqa E501
         proc = subprocess.Popen(dump_cmd, shell=True)
         proc.wait()
         (stdout, stderr) = proc.communicate()
