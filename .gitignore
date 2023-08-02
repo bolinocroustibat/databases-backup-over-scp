@@ -164,6 +164,9 @@ __pycache__/
 .env
 .envrc
 
+# Ruff
+.ruff_cache/
+
 # Project specific
 settings.py
 settings.pyc

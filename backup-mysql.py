@@ -11,8 +11,10 @@ logger = FileLogger()
 # Create local backup folder
 try:
     os.makedirs(TODAY_LOCAL_PATH)
+
 except Exception as e:
     logger.error(f"Error while creating local backup folder: {str(e)}")
+
 else:
     logger.success(f"Local backup folder {TODAY_LOCAL_PATH} created.")
 
