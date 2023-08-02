@@ -13,7 +13,7 @@ from settings import POSTGRES_DB_NAMES, POSTGRES_SYSTEM_USER, REMOTE_HOST
 logger = FileLogger()
 
 
-# Create local backup folde
+# Create local backup folder
 proc = subprocess.Popen(
     f'su -c "mkdir -p {TODAY_LOCAL_PATH}" {POSTGRES_SYSTEM_USER}',
     shell=True,

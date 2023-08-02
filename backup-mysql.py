@@ -1,4 +1,5 @@
 import os
+import subprocess
 from typing import Optional
 
 from paramiko import SSHClient
@@ -7,17 +8,35 @@ from helpers.logger import FileLogger
 from helpers.paths import TODAY_LOCAL_PATH
 from helpers.remote_connect import remote_connect
 from helpers.remote_copy import remote_copy
-from settings import MYSQL_DB_NAMES, MYSQL_USER, MYSQL_USER_PASSWORD, REMOTE_HOST
+from settings import (
+    MYSQL_DB_NAMES,
+    MYSQL_USER,
+    MYSQL_USER_PASSWORD,
+    POSTGRES_SYSTEM_USER,
+    REMOTE_HOST,
+)
 
 
 logger = FileLogger()
 
 # Create local backup folder
-try:
-    os.makedirs(TODAY_LOCAL_PATH)
+if POSTGRES_SYSTEM_USER:
+    # If we have a postgre system user, we create the folder as owned by it
+    # So it can also be writable by the postgresql script
+    cmd: str = f'su -c "mkdir -p {TODAY_LOCAL_PATH}" {POSTGRES_SYSTEM_USER}'
+else:
+    cmd: str = f"mkdir -p {TODAY_LOCAL_PATH}"
+proc = subprocess.Popen(
+    cmd,
+    shell=True,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+)
+proc.wait()
+(stdout, stderr) = proc.communicate()
 
-except Exception as e:
-    logger.error(f"Error while creating local backup folder: {str(e)}")
+if stderr:
+    logger.error(f"Error while creating local backup folder: {stderr.decode()}")
 
 else:
     logger.success(f"Local backup folder {TODAY_LOCAL_PATH} created.")
