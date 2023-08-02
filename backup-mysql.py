@@ -1,8 +1,12 @@
 import os
+from typing import Optional
+
+from paramiko import SSHClient
 
 from helpers.logger import FileLogger
 from helpers.paths import TODAY_LOCAL_PATH
-from helpers.remote import remote_backup
+from helpers.remote_connect import remote_connect
+from helpers.remote_copy import remote_copy
 from settings import MYSQL_DB_NAMES, MYSQL_USER, MYSQL_USER_PASSWORD, REMOTE_HOST
 
 
@@ -18,6 +22,8 @@ except Exception as e:
 else:
     logger.success(f"Local backup folder {TODAY_LOCAL_PATH} created.")
 
+    ssh_client = None
+
     # Local backup
     for db in MYSQL_DB_NAMES:
         try:
@@ -30,9 +36,17 @@ else:
             )
         else:
             logger.success(f"Backup file '{db_filename}' has been saved locally.")
+
             # Remote backup
             if REMOTE_HOST:
-                remote_backup(db_filename=db_filename, logger=logger)
+                if not ssh_client:
+                    ssh_client: Optional[SSHClient] = remote_connect(logger)
+                if ssh_client:
+                    remote_copy(ssh_client, db_filename, logger)
+                else:
+                    logger.error(
+                        "Couldn't copy on server, couldn't get SSH connection."
+                    )
 
 logger.log("MySQL backup script completed.")
 
