@@ -1,15 +1,18 @@
-from typing import Optional
+from datetime import datetime
+from typing import Optional, Tuple
 
 from paramiko import SSHClient
 
-from helpers.paths import TODAY_REMOTE_PATH
-from settings import REMOTE_HOST, REMOTE_USER
+from settings import REMOTE_HOST, REMOTE_PATH, REMOTE_USER
 
 
-def remote_connect(logger) -> Optional[SSHClient]:
+def remote_connect(logger) -> Optional[Tuple[SSHClient, str]]:
     """
-    Returns ssh connection to remote server if creation of remote folder was successful
+    Returns SSH connection and path of created folder on remote server
+    if creation of remote folder was successful
     """
+    now: str = datetime.utcnow().strftime("%Y-%m-%d--%H-%M")
+    remote_path = REMOTE_PATH + now
     try:
         # Connect to backup server
         ssh_client: SSHClient = SSHClient()
@@ -22,14 +25,14 @@ def remote_connect(logger) -> Optional[SSHClient]:
     else:
         # Create remote backup folder
         try:
-            ssh_client.exec_command(f"mkdir -p {TODAY_REMOTE_PATH}")
+            ssh_client.exec_command(f"mkdir -p {remote_path}")
             ssh_client.close
             logger.success(
-                f"Remote backup folder {TODAY_REMOTE_PATH} created on '{REMOTE_HOST}'"
+                f"Remote backup folder {remote_path} created on '{REMOTE_HOST}'"
             )
         except Exception as e:
             logger.error(
-                f"Error while creating remote backup folder '{TODAY_REMOTE_PATH}' on '{REMOTE_HOST}': {str(e)}"  # noqa E501
+                f"Error while creating remote backup folder '{remote_path}' on '{REMOTE_HOST}': {str(e)}"  # noqa E501
             )
         else:
-            return ssh_client
+            return ssh_client, remote_path

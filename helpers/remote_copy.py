@@ -1,11 +1,12 @@
 from paramiko import SSHClient
 from scp import SCPClient
 
-from helpers.paths import TODAY_LOCAL_PATH, TODAY_REMOTE_PATH
 from settings import REMOTE_HOST
 
 
-def remote_copy(ssh_client: SSHClient, db_filename: str, logger) -> None:
+def remote_copy(
+    logger, ssh_client: SSHClient, local_path: str, remote_path: str, db_filename: str
+) -> None:
     """
     Initiate distant file transfer.
     SCPClient takes a paramiko transport as its only argument
@@ -13,17 +14,16 @@ def remote_copy(ssh_client: SSHClient, db_filename: str, logger) -> None:
     transport = ssh_client.get_transport()
     if transport:
         scp = SCPClient(transport)
-        # Copy on remote
         try:
             scp.put(
-                f"{TODAY_LOCAL_PATH}/{db_filename}",
-                f"{TODAY_REMOTE_PATH}/{db_filename}",
-            )  # noqa E501
+                f"{local_path}/{db_filename}",
+                f"{remote_path}/{db_filename}",
+            )
             logger.success(
-                f"Backup file '{db_filename}' has been copied on '{REMOTE_HOST}'"  # noqa E501
+                f"Backup file '{db_filename}' has been copied on '{REMOTE_HOST}'"
             )
         except Exception as e:
             logger.error(
-                f"Error while copying '{db_filename}' on '{REMOTE_HOST}': {str(e)}"  # noqa E501
+                f"Error while copying '{db_filename}' on '{REMOTE_HOST}': {str(e)}"
             )
         scp.close()

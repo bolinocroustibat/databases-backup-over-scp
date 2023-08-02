@@ -29,6 +29,10 @@ class FileLogger:
         self.log_file.write(f"{time}: {message}\n")
 
     def log(self, message: str) -> None:
+        print(f"{self.PURPLE}{message}{self.ENDC}")
+        self.log_write_file(message)
+
+    def debuf(self, message: str) -> None:
         print(f"{self.CYAN}{message}{self.ENDC}")
         self.log_write_file(message)
 
