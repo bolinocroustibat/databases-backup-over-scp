@@ -1,6 +1,6 @@
 [project]
 name = "databases-backup-over-scp"
-version = "0.4.3"
+version = "0.4.4"
 description = "Two Python scripts for remote backups of MySQL and PostgreSQL databases over SCP"
 authors = [{ name = "Adrien Carpentier", email = "me@adriencarpentier.com" }]
 dependencies = [
@@ -17,7 +17,6 @@ homepage = ""
 includes = []
 [tool.pdm.dev-dependencies]
 dev = [
-    "black>=23.3.0",
     "ruff>=0.0.275",
 ]
 [build-system]
