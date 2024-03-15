@@ -2,6 +2,8 @@
 # Used only by backup-postgresql.py script.
 POSTGRES_DB_NAMES = ["db1_name", "db2_name"]  # PostgreSQL databases names to backup.
 POSTGRES_SYSTEM_USER = "postgres"  # make sure this system user has enough privileges to take all databases backup. # noqa E501
+POSTGRES_PASSWD = ""
+POSTGRES_PORT = 5432  # PostgreSQL port.
 
 # MySQL database details to which backup to be done.
 # Used only by backup-mysql.py script.

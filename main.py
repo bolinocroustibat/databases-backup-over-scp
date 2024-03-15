@@ -11,6 +11,8 @@ from settings import (
     MYSQL_USER_PASSWORD,
     POSTGRES_DB_NAMES,
     POSTGRES_SYSTEM_USER,
+    POSTGRES_PASSWD,
+    POSTGRES_PORT,
     REMOTE_HOST,
 )
 
@@ -53,7 +55,7 @@ if local_path:
     # Local PostgreSQL backup
     for db in POSTGRES_DB_NAMES:
         db_filename: str = f"{db}.dump"
-        dump_cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "pg_dump {db} > {local_path}/{db_filename}" '  # noqa E501
+        dump_cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "PGPASSWORD="{POSTGRES_PASSWD}" pg_dump {db} -Fc -U {POSTGRES_SYSTEM_USER} -p {POSTGRES_PORT} > {local_path}/{db_filename}'  # noqa E501
         proc = subprocess.Popen(dump_cmd, shell=True)
         proc.wait()
         (stdout, stderr) = proc.communicate()
