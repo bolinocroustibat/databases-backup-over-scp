@@ -29,8 +29,8 @@ if local_path:
     # Local MySQL backup
     for db in MYSQL_DB_NAMES:
         try:
-            db_filename: str = f"{db}.sql"
-            dump_cmd: str = f"mysqldump --user={MYSQL_USER} --password={MYSQL_USER_PASSWORD} {db} > {local_path}/{db_filename}"  # noqa E501
+            db_filename: str = f"{db}.sql.gz"
+            dump_cmd: str = f"mysqldump --user={MYSQL_USER} --password={MYSQL_USER_PASSWORD} {db} | gzip -9 -c > {local_path}/{db_filename}"  # noqa E501
             os.system(dump_cmd)
         except Exception as e:
             logger.error(
@@ -54,7 +54,7 @@ if local_path:
 
     # Local PostgreSQL backup
     for db in POSTGRES_DB_NAMES:
-        db_filename: str = f"{db}.dump"
+        db_filename: str = f"{db}.gzip"
         dump_cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "PGPASSWORD="{POSTGRES_PASSWD}" pg_dump {db} -Fc -U {POSTGRES_SYSTEM_USER} -p {POSTGRES_PORT} > {local_path}/{db_filename}'  # noqa E501
         proc = subprocess.Popen(dump_cmd, shell=True)
         proc.wait()
