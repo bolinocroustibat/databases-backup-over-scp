@@ -1,6 +1,6 @@
 # Dependencies
 
-Those two Python scripts are to be used for MySQL/PostgreSQL databases backups, using Python3 (>=3.8), mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
+Python script used for MySQL/PostgreSQL databases backups, using Python3 (>=3.8), mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
 
 # Configuration
 
@@ -17,23 +17,15 @@ Same on the distant server, don't forget to make the backup folder (whose path i
 
 # Run
 
-Create a virtual environement, activate it, install `paramiko` and `scp` Python packages inside it, and run:
+Create a virtual environment with `python3 -m venv .venv`, install packages in it with `pip install .`, and run the script with:
 
-MySQL:
-```sh
-python3 backup-mysql.py
-```
-
-PostgreSQL:
-```sh
-python3 backup-postgresql.py
+```bash
+python3 main.py
 ```
 
 Or use [PDM](https://pdm.fming.dev/) to run it, with:
-
-MySQL:
-```sh
-pdm run backup-mysql.py
+```bash
+pdm run main.py
 ```
 
 
@@ -52,11 +44,6 @@ or/and:
 ```
 
 In this case, don't forget to make your script executable by your cron user, with something like this as your cron user:
-
-```sh
-chmod +x backup-mysql.py
-```
-or/and:
-```sh
-chmod +x backup-postgresql.py
+```bash
+chmod +x main.py
 ```

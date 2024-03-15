@@ -1,11 +1,10 @@
 import subprocess
 from datetime import datetime
-from typing import Optional
 
 from settings import LOCAL_PATH, POSTGRES_SYSTEM_USER
 
 
-def create_local_folder(logger) -> Optional[str]:
+def create_local_folder(logger) -> str | None:
     """
     Create local backup folder
     Returns the path of the created folder if successful, None otherwise

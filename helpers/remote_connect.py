@@ -1,12 +1,12 @@
 from datetime import datetime
-from typing import Optional, Tuple
+from typing import Tuple
 
 from paramiko import SSHClient
 
 from settings import REMOTE_HOST, REMOTE_PATH, REMOTE_USER
 
 
-def remote_connect(logger) -> Optional[Tuple[SSHClient, str]]:
+def remote_connect(logger) -> Tuple[SSHClient, str] | None:
     """
     Returns SSH connection and path of created folder on remote server
     if creation of remote folder was successful
