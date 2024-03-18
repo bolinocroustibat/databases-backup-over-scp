@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 
 from settings import LOGFILE
 
@@ -25,7 +25,7 @@ class FileLogger:
         """
         Output message with readable millisecond time in log file
         """
-        time: str = datetime.utcnow().strftime("%m/%d %H:%M:%S/%f")[:17]
+        time: str = datetime.now(UTC).strftime("%m/%d %H:%M:%S/%f")[:17]
         self.log_file.write(f"{time}: {message}\n")
 
     def log(self, message: str) -> None:

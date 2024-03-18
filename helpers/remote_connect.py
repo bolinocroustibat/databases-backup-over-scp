@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Tuple
 
 from paramiko import SSHClient
@@ -11,7 +11,7 @@ def remote_connect(logger) -> Tuple[SSHClient, str] | None:
     Returns SSH connection and path of created folder on remote server
     if creation of remote folder was successful
     """
-    now: str = datetime.utcnow().strftime("%Y-%m-%d--%H-%M")
+    now: str = datetime.now(UTC).strftime("%Y-%m-%d_%H-%M")
     remote_path = REMOTE_PATH + now
     try:
         # Connect to backup server

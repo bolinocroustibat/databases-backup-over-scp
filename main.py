@@ -37,7 +37,7 @@ if local_path:
                 f"Error while trying to dump the database '{db}' locally: {str(e)}"  # noqa E501
             )
         else:
-            logger.success(f"Backup file '{db_filename}' has been saved locally.")
+            logger.success(f"Backup file '{local_path}/{db_filename}' has been saved locally.")
 
             # Remote MySQL backup
             if REMOTE_HOST:
@@ -65,7 +65,7 @@ if local_path:
                 f"Error while trying to dump the database {db} locally: {stderr.decode()}"  # noqa E501
             )
         else:
-            logger.success(f"Backup dump file '{db_filename}' has been saved locally.")
+            logger.success(f"Backup dump file '{local_path}/{db_filename}' has been saved locally.")
 
             # Remote PostgreSQL backup
             if REMOTE_HOST:

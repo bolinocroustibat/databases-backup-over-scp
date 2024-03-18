@@ -1,5 +1,5 @@
 import subprocess
-from datetime import datetime
+from datetime import datetime, UTC
 
 from settings import LOCAL_PATH, POSTGRES_SYSTEM_USER
 
@@ -9,7 +9,7 @@ def create_local_folder(logger) -> str | None:
     Create local backup folder
     Returns the path of the created folder if successful, None otherwise
     """
-    now: str = datetime.utcnow().strftime("%Y-%m-%d--%H-%M")
+    now: str = datetime.now(UTC).strftime("%Y-%m-%d_%H-%M")
     local_path = LOCAL_PATH + now
     if POSTGRES_SYSTEM_USER:
         # If we have a postgre system user, we create the folder as owned by it
