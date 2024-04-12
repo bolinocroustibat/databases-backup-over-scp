@@ -54,7 +54,7 @@ if local_path:
 
     # Local PostgreSQL backup
     for db in POSTGRES_DB_NAMES:
-        db_filename: str = f"{db}.gzip"
+        db_filename: str = f"{db}.dump"
         dump_cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "PGPASSWORD=\"{POSTGRES_PASSWD}\" pg_dump {db} -Fc -U {POSTGRES_SYSTEM_USER} -p {POSTGRES_PORT} > {local_path}/{db_filename}"'  # noqa E501
         proc = subprocess.Popen(dump_cmd, shell=True)
         proc.wait()
