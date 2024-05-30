@@ -34,12 +34,7 @@ pdm run main.py
 You can use the scripts with a Linux cron. Edit your root crontab with `crontab -e` and add those lines, for example:
 
 ```
-# Backup MySQL databases every Tuesday and Friday at 3:00
-0 3 * * 2,5 python3 /root/database-backup-over-scp/main.py > /root/database-backup-over-scp/log-last-cron.log
-```
-or/and:
-```
-# Backup PostgreSQL databases every Monday and Thursday at 6:00
+# Backup databases every Monday and Thursday at 6:00
 0 6 * * 1,4 python3 /root/database-backup-over-scp/main.py > /root/database-backup-over-scp/log-last-cron.log
 ```
 
