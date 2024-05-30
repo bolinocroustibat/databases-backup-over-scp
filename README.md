@@ -35,12 +35,12 @@ You can use the scripts with a Linux cron. Edit your root crontab with `crontab 
 
 ```
 # Backup MySQL databases every Tuesday and Friday at 3:00
-0 3 * * 2,5 python3 /root/database-backup-over-scp/backup-mysql.py > /root/database-backup-over-scp/log-last-cron.log
+0 3 * * 2,5 python3 /root/database-backup-over-scp/main.py > /root/database-backup-over-scp/log-last-cron.log
 ```
 or/and:
 ```
 # Backup PostgreSQL databases every Monday and Thursday at 6:00
-0 6 * * 1,4 python3 /root/database-backup-over-scp/backup-postgresql.py > /root/database-backup-over-scp/log-last-cron.log
+0 6 * * 1,4 python3 /root/database-backup-over-scp/main.py > /root/database-backup-over-scp/log-last-cron.log
 ```
 
 In this case, don't forget to make your script executable by your cron user, with something like this as your cron user:
