@@ -1,25 +1,23 @@
-postgres:
-  # PostgreSQL database details to which backup to be done.
-  # Used only by backup-postgresql.py script.
-  db_names: db1_name, db2_name  # PostgreSQL databases names to backup
+postgres: # PostgreSQL database details to which backup to be done
+  db_names: # PostgreSQL databases names to backup
+    - db1_name
+    - db2_name
   system_user: postgres  # make sure this system user has enough privileges to take all databases backup
   password: ""  # PostgreSQL password
   port: 5432  # PostgreSQL port
 
-mysql:
-  # MySQL database details to which backup to be done
-  # Used only by backup-mysql.py script
-  db_names: db1_name, db2_name  # MySQL databases to backup
+mysql: # MySQL database details to which backup to be done
+  db_names: # MySQL databases to backup
+    - db1_name
+    - db2_name
   user: ""  # make sure this MySQL user has enough privileges to take all databases backup
   user_password: ""  # MySQL user password
 
-local:
-  # Local setting
+local: # Local settings
   path: /user/MyUser/databases-backup-over-scp/dumps/  # full local path where dumps will be saved, with trailing slash
   logfile: /user/MyUser/databases-backup-over-scp/log-last-script.log  # full path to log file
 
-remote:
-  # Remote settings
+remote: # Remote settings
   host: ""  # leave blank if you don't want to save remotely
   user: ""  # you need to be authorized on remote with your user SSH keys
   path: /user/MyUser/backup-sql/  # full remote path where dumps will be saved
