@@ -165,7 +165,6 @@ __pycache__/
 .ruff_cache/
 
 # Project specific
-settings.py
-settings.pyc
+settings.ini
 log-last-script.log
 log-last-cron.log
