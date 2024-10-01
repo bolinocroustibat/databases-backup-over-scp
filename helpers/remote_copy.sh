@@ -4,8 +4,6 @@ source helpers/load_config.sh
 source helpers/logger.sh
 
 REMOTE_HOST=$(config "remote" "host")
-REMOTE_USER=$(config "remote" "user")
-REMOTE_PATH=$(config "remote" "path")
 
 remote_copy() {
     local local_path=$1
