@@ -24,7 +24,7 @@ UNDERLINE="\033[4m"
 
 log_write_file() {
     local message=$1
-    local time=$(date +"%m/%d %H:%M:%S/%3N")
+    local time=$(date +"%Y/%m/%d %H:%M:%S")
     echo "${time}: ${message}" >> "$LOGFILE"
 }
 

@@ -8,11 +8,9 @@ source helpers/create_local_folder.sh
 source helpers/remote_connect.sh
 source helpers/remote_copy.sh
 
-MYSQL_DB_NAMES=$(config "mysql" "db_names")
 MYSQL_USER=$(config "mysql" "user")
 MYSQL_USER_PASSWORD=$(config "mysql" "user_password")
 
-POSTGRES_DB_NAMES=$(config "postgres" "db_names")
 POSTGRES_PASSWD=$(config "postgres" "password")
 POSTGRES_PORT=$(config "postgres" "port")
 POSTGRES_SYSTEM_USER=$(config "postgres" "system_user")
@@ -29,8 +27,8 @@ if [[ -n "$local_path" ]]; then
     # Check if mysqldump command exists
     if command -v mysqldump &> /dev/null; then
         # Local MySQL backup
-        IFS=', ' read -r -a mysql_dbs <<< "$MYSQL_DB_NAMES"
-        for db in "${mysql_dbs[@]}"; do
+        mysql_dbs=$(config "mysql" "db_names")
+        for db in $mysql_dbs; do
             db_filename="${db}.sql.gz"
             dump_cmd="mysqldump --user=${MYSQL_USER} --password=${MYSQL_USER_PASSWORD} ${db} | gzip -9 -c > ${local_path}/${db_filename}"
 
@@ -47,8 +45,8 @@ if [[ -n "$local_path" ]]; then
     fi
 
     # Local PostgreSQL backup
-    IFS=', ' read -r -a postgres_dbs <<< "$POSTGRES_DB_NAMES"
-    for db in "${postgres_dbs[@]}"; do
+    postgres_dbs=$(config "postgres" "db_names")
+    for db in $postgres_dbs; do
         db_filename="${db}.dump"
         dump_cmd="su - ${POSTGRES_SYSTEM_USER} -c \"PGPASSWORD='${POSTGRES_PASSWD}' pg_dump ${db} -Fc -U ${POSTGRES_SYSTEM_USER} -p ${POSTGRES_PORT} > ${local_path}/${db_filename}\""
 
