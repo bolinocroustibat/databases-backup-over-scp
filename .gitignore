@@ -165,6 +165,6 @@ __pycache__/
 .ruff_cache/
 
 # Project specific
-settings.ini
+config.yaml
 log-last-script.log
 log-last-cron.log

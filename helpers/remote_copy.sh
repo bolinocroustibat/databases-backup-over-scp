@@ -1,12 +1,11 @@
 #!/bin/bash
 
-source helpers/read_ini_file.sh
-source settings.ini
+source helpers/load_config.sh
 source helpers/logger.sh
 
-REMOTE_HOST=$(read_ini_file settings.ini "remote" "host")
-REMOTE_USER=$(read_ini_file settings.ini "remote" "user")
-REMOTE_PATH=$(read_ini_file settings.ini "remote" "path")
+REMOTE_HOST=$(config "remote" "host")
+REMOTE_USER=$(config "remote" "user")
+REMOTE_PATH=$(config "remote" "path")
 
 # Function to perform remote copy
 remote_copy() {

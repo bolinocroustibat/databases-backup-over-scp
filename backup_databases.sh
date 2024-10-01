@@ -1,26 +1,25 @@
 #!/bin/bash
 
-source helpers/read_ini_file.sh
+set -e  # Exit immediately if a command exits with a non-zero status
+
+source helpers/load_config.sh
 source helpers/logger.sh
 source helpers/create_local_folder.sh
 source helpers/remote_connect.sh
 source helpers/remote_copy.sh
 
-# Load settings from settings.ini
-CONFIG_FILE="settings.ini"
+MYSQL_DB_NAMES=$(config "mysql" "db_names")
+MYSQL_USER=$(config "mysql" "user")
+MYSQL_USER_PASSWORD=$(config "mysql" "user_password")
 
-MYSQL_DB_NAMES=$(read_ini_file "$CONFIG_FILE" "mysql" "db_names")
-MYSQL_USER=$(read_ini_file "$CONFIG_FILE" "mysql" "user")
-MYSQL_USER_PASSWORD=$(read_ini_file "$CONFIG_FILE" "mysql" "user_password")
+POSTGRES_DB_NAMES=$(config "postgres" "db_names")
+POSTGRES_PASSWD=$(config "postgres" "password")
+POSTGRES_PORT=$(config "postgres" "port")
+POSTGRES_SYSTEM_USER=$(config "postgres" "system_user")
 
-POSTGRES_DB_NAMES=$(read_ini_file "$CONFIG_FILE" "postgres" "db_names")
-POSTGRES_PASSWD=$(read_ini_file "$CONFIG_FILE" "postgres" "password")
-POSTGRES_PORT=$(read_ini_file "$CONFIG_FILE" "postgres" "port")
-POSTGRES_SYSTEM_USER=$(read_ini_file "$CONFIG_FILE" "postgres" "system_user")
-
-REMOTE_HOST=$(read_ini_file "$CONFIG_FILE" "remote" "host")
-REMOTE_USER=$(read_ini_file "$CONFIG_FILE" "remote" "user")
-REMOTE_PATH=$(read_ini_file "$CONFIG_FILE" "remote" "path")
+REMOTE_HOST=$(config "remote" "host")
+REMOTE_USER=$(config "remote" "user")
+REMOTE_PATH=$(config "remote" "path")
 
 # Create local backup folder
 local_path=$(create_local_folder)
@@ -40,6 +39,7 @@ if [[ -n "$local_path" ]]; then
             remote_copy "$local_path" "$db_filename"
         else
             error "Error while trying to dump the database '${db}' locally."
+            exit 1
         fi
     done
 
@@ -54,6 +54,10 @@ if [[ -n "$local_path" ]]; then
             remote_copy "$local_path" "$db_filename"
         else
             error "Error while trying to dump the database '${db}' locally."
+            exit 1
         fi
     done
+else
+    error "Failed to create local backup folder. Exiting."
+    exit 1
 fi

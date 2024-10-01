@@ -1,10 +1,10 @@
 # Dependencies
 
-Bash script used for MySQL/MariaDB/PostgreSQL databases backups.
+Bash script used for MySQL/MariaDB/PostgreSQL databases backups over the network with SCP.
 
 # Configuration
 
-Create a `settings.init` file for your settings, based on `settings_example.ini`, and fill in the settings according to the comments. If you don't want to save remotely, leave the `remote.host` empty.
+Create a `settings.yaml` file for your settings, based on `settings_example.yaml`, and fill in the settings according to the comments. If you don't want to save remotely, leave the `remote.host` empty.
 
 Don't forget to make the local directory where the dumps will be saved (whose path is `local.path` in the settings file) writable by the user www-data or whoever user is running the script.
 For PostgreSQL, since it's the system user `postgres.system_user` which will dump the database, I suggest to make the PostgreSQL user owning the directory:
@@ -19,7 +19,7 @@ Same on the distant server, don't forget to make the backup folder (whose path i
 
 Run the script with:
 ```bash
-bash main.sh
+sudo bash backup_databases.sh
 ```
 
 # Run with a cron
