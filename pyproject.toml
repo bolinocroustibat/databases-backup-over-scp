@@ -1,24 +1,15 @@
 [project]
 name = "databases-backup-over-scp"
-version = "0.5.0"
-description = "Two Python scripts for remote backups of MySQL and PostgreSQL databases over SCP"
+version = "0.5.1"
+description = "Python script for remote backups of MySQL and PostgreSQL databases over SCP"
 authors = [{ name = "Adrien Carpentier", email = "me@adriencarpentier.com" }]
-dependencies = [
-    "paramiko<4.0.0,>=3.0.0",
-    "scp<1.0.0,>=0.14.1"
-]
-requires-python = ">=3.10,<4.0"
+dependencies = ["paramiko<4.0.0,>=3.0.0", "scp<1.0.0,>=0.14.1"]
+requires-python = ">=3.10,<3.13"
 license = { text = "MIT" }
 
-[project.urls]
-homepage = ""
+[tool.ruff]
+line-length = 100
+lint = { extend-select = ["I"] }
 
-[tool.pdm]
-includes = []
-[tool.pdm.dev-dependencies]
-dev = [
-    "ruff>=0.3.2",
-]
-[build-system]
-requires = ["pdm-pep517"]
-build-backend = "pdm.pep517.api"
+[tool.uv]
+dev-dependencies = ["ruff>=0.6.8"]

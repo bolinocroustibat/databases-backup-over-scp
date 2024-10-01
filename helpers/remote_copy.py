@@ -19,11 +19,7 @@ def remote_copy(
                 f"{local_path}/{db_filename}",
                 f"{remote_path}/{db_filename}",
             )
-            logger.success(
-                f"Backup file '{db_filename}' has been copied on '{REMOTE_HOST}'"
-            )
+            logger.success(f"Backup file '{db_filename}' has been copied on '{REMOTE_HOST}'")
         except Exception as e:
-            logger.error(
-                f"Error while copying '{db_filename}' on '{REMOTE_HOST}': {str(e)}"
-            )
+            logger.error(f"Error while copying '{db_filename}' on '{REMOTE_HOST}': {str(e)}")
         scp.close()

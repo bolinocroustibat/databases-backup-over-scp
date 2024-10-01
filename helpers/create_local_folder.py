@@ -1,5 +1,5 @@
 import subprocess
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 from settings import LOCAL_PATH, POSTGRES_SYSTEM_USER
 

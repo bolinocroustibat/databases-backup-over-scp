@@ -1,8 +1,8 @@
 import os
 import subprocess
 
-from helpers.logger import FileLogger
 from helpers.create_local_folder import create_local_folder
+from helpers.logger import FileLogger
 from helpers.remote_connect import remote_connect
 from helpers.remote_copy import remote_copy
 from settings import (
@@ -10,12 +10,11 @@ from settings import (
     MYSQL_USER,
     MYSQL_USER_PASSWORD,
     POSTGRES_DB_NAMES,
-    POSTGRES_SYSTEM_USER,
     POSTGRES_PASSWD,
     POSTGRES_PORT,
+    POSTGRES_SYSTEM_USER,
     REMOTE_HOST,
 )
-
 
 logger = FileLogger()
 
@@ -44,18 +43,14 @@ if local_path:
                 if not ssh_client and not remote_path:
                     (ssh_client, remote_path) = remote_connect(logger) or (None, None)
                 if ssh_client and remote_path:
-                    remote_copy(
-                        logger, ssh_client, local_path, remote_path, db_filename
-                    )
+                    remote_copy(logger, ssh_client, local_path, remote_path, db_filename)
                 else:
-                    logger.error(
-                        "Couldn't copy on server, couldn't get SSH connection."
-                    )
+                    logger.error("Couldn't copy on server, couldn't get SSH connection.")
 
     # Local PostgreSQL backup
     for db in POSTGRES_DB_NAMES:
         db_filename: str = f"{db}.dump"
-        dump_cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "PGPASSWORD=\"{POSTGRES_PASSWD}\" pg_dump {db} -Fc -U {POSTGRES_SYSTEM_USER} -p {POSTGRES_PORT} > {local_path}/{db_filename}"'  # noqa E501
+        dump_cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "PGPASSWORD="{POSTGRES_PASSWD}" pg_dump {db} -Fc -U {POSTGRES_SYSTEM_USER} -p {POSTGRES_PORT} > {local_path}/{db_filename}"'  # noqa E501
         proc = subprocess.Popen(dump_cmd, shell=True)
         proc.wait()
         (stdout, stderr) = proc.communicate()
@@ -72,13 +67,9 @@ if local_path:
                 if not ssh_client and not remote_path:
                     (ssh_client, remote_path) = remote_connect(logger) or (None, None)
                 if ssh_client and remote_path:
-                    remote_copy(
-                        logger, ssh_client, local_path, remote_path, db_filename
-                    )
+                    remote_copy(logger, ssh_client, local_path, remote_path, db_filename)
                 else:
-                    logger.error(
-                        "Couldn't copy on server, couldn't get SSH connection."
-                    )
+                    logger.error("Couldn't copy on server, couldn't get SSH connection.")
 
 logger.log("Backup script completed.")
 

@@ -1,4 +1,4 @@
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from typing import Tuple
 
 from paramiko import SSHClient
@@ -27,9 +27,7 @@ def remote_connect(logger) -> Tuple[SSHClient, str] | None:
         try:
             ssh_client.exec_command(f"mkdir -p {remote_path}")
             ssh_client.close
-            logger.success(
-                f"Remote backup folder {remote_path} created on '{REMOTE_HOST}'"
-            )
+            logger.success(f"Remote backup folder {remote_path} created on '{REMOTE_HOST}'")
         except Exception as e:
             logger.error(
                 f"Error while creating remote backup folder '{remote_path}' on '{REMOTE_HOST}': {str(e)}"  # noqa E501

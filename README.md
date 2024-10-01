@@ -1,6 +1,6 @@
 # Dependencies
 
-Python script used for MySQL/PostgreSQL databases backups, using Python3 (>=3.8), mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
+Python script used for MySQL/MariaDB/PostgreSQL databases backups, using Python3 (>=3.10), mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
 
 # Configuration
 
@@ -18,14 +18,14 @@ Same on the distant server, don't forget to make the backup folder (whose path i
 # Run
 
 Create a virtual environment with `python3 -m venv .venv`, install packages in it with `pip install .`, and run the script with:
-
 ```bash
 python3 main.py
 ```
 
-Or use [PDM](https://pdm.fming.dev/) to run it, with:
+Or just use [uv](https://docs.astral.sh/uv/):
 ```bash
-pdm run main.py
+uv sync
+uv run main.py
 ```
 
 
@@ -41,4 +41,11 @@ You can use the scripts with a Linux cron. Edit your root crontab with `crontab 
 In this case, don't forget to make your script executable by your cron user, with something like this as your cron user:
 ```bash
 chmod +x main.py
+```
+
+# Lint and frmat the code
+
+To lint, format and sort imports:
+```bash
+uvx ruff check --fix && uvx ruff format
 ```
