@@ -26,9 +26,6 @@ local_path=$(create_local_folder)
 
 if [[ -n "$local_path" ]]; then
 
-    ssh_client=""
-    remote_path=""
-
     # Check if mysqldump command exists
     if command -v mysqldump &> /dev/null; then
         # Local MySQL backup

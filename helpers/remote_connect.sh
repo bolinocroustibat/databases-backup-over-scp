@@ -3,12 +3,10 @@
 source helpers/load_config.sh
 source helpers/logger.sh
 
-# Load settings from settings.ini
 REMOTE_HOST=$(config "remote" "host")
 REMOTE_PATH=$(config "remote" "path")
 REMOTE_USER=$(config "remote" "user")
 
-# Function to connect to remote server and create backup folder
 remote_connect() {
     local now=$(date -u +"%Y-%m-%d_%H-%M")
     local remote_path="${REMOTE_PATH}${now}"

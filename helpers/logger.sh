@@ -14,42 +14,36 @@ UNDERLINE="\033[4m"
 # Log file path
 LOGFILE="logfile.log"
 
-# Function to write log to file with timestamp
 log_write_file() {
     local message=$1
     local time=$(date +"%m/%d %H:%M:%S/%3N")
     echo "${time}: ${message}" >> "$LOGFILE"
 }
 
-# Function to log message with color
 log() {
     local message=$1
     echo -e "${PURPLE}${message}${ENDC}"
     log_write_file "$message"
 }
 
-# Function to log debug message with color
 debug() {
     local message=$1
     echo -e "${CYAN}${message}${ENDC}"
     log_write_file "$message"
 }
 
-# Function to log warning message with color
 warning() {
     local message=$1
     echo -e "${YELLOW}${message}${ENDC}"
     log_write_file "$message"
 }
 
-# Function to log error message with color
 error() {
     local message=$1
     echo -e "${RED}${message}${ENDC}"
     log_write_file "$message"
 }
 
-# Function to log success message with color
 success() {
     local message=$1
     echo -e "${GREEN}${message}${ENDC}"

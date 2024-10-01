@@ -3,12 +3,9 @@
 source helpers/load_config.sh
 source helpers/logger.sh
 
-# Load settings from settings.ini
 POSTGRES_SYSTEM_USER=$(config "postgres" "system_user")
 LOCAL_PATH=$(config "local" "path")
 
-
-# Function to create local backup folder
 create_local_folder() {
     local now=$(date -u +"%Y-%m-%d_%H-%M")
     local local_path="${LOCAL_PATH}${now}"

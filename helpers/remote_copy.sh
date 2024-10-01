@@ -7,7 +7,6 @@ REMOTE_HOST=$(config "remote" "host")
 REMOTE_USER=$(config "remote" "user")
 REMOTE_PATH=$(config "remote" "path")
 
-# Function to perform remote copy
 remote_copy() {
     local local_path=$1
     local db_filename=$2
