@@ -25,23 +25,29 @@ REMOTE_PATH=$(config "remote" "path")
 local_path=$(create_local_folder)
 
 if [[ -n "$local_path" ]]; then
+
     ssh_client=""
     remote_path=""
 
-    # Local MySQL backup
-    IFS=', ' read -r -a mysql_dbs <<< "$MYSQL_DB_NAMES"
-    for db in "${mysql_dbs[@]}"; do
-        db_filename="${db}.sql.gz"
-        dump_cmd="mysqldump --user=${MYSQL_USER} --password=${MYSQL_USER_PASSWORD} ${db} | gzip -9 -c > ${local_path}/${db_filename}"
+    # Check if mysqldump command exists
+    if command -v mysqldump &> /dev/null; then
+        # Local MySQL backup
+        IFS=', ' read -r -a mysql_dbs <<< "$MYSQL_DB_NAMES"
+        for db in "${mysql_dbs[@]}"; do
+            db_filename="${db}.sql.gz"
+            dump_cmd="mysqldump --user=${MYSQL_USER} --password=${MYSQL_USER_PASSWORD} ${db} | gzip -9 -c > ${local_path}/${db_filename}"
 
-        if eval "$dump_cmd"; then
-            info "Backup file '${local_path}/${db_filename}' has been saved locally."
-            remote_copy "$local_path" "$db_filename"
-        else
-            error "Error while trying to dump the database '${db}' locally."
-            exit 1
-        fi
-    done
+            if eval "$dump_cmd"; then
+                log "Backup file '${local_path}/${db_filename}' has been saved locally."
+                remote_copy "$local_path" "$db_filename"
+            else
+                error "Error while trying to dump the MySQL database '${db}' locally."
+                exit 1
+            fi
+        done
+    else
+        error "mysqldump command not found. Not able to backup MySQL databases."
+    fi
 
     # Local PostgreSQL backup
     IFS=', ' read -r -a postgres_dbs <<< "$POSTGRES_DB_NAMES"
@@ -50,10 +56,10 @@ if [[ -n "$local_path" ]]; then
         dump_cmd="su - ${POSTGRES_SYSTEM_USER} -c \"PGPASSWORD='${POSTGRES_PASSWD}' pg_dump ${db} -Fc -U ${POSTGRES_SYSTEM_USER} -p ${POSTGRES_PORT} > ${local_path}/${db_filename}\""
 
         if eval "$dump_cmd"; then
-            info "Backup dump file '${local_path}/${db_filename}' has been saved locally."
+            log "Backup dump file '${local_path}/${db_filename}' has been saved locally."
             remote_copy "$local_path" "$db_filename"
         else
-            error "Error while trying to dump the database '${db}' locally."
+            error "Error while trying to dump the PostgreSQL database '${db}' locally."
             exit 1
         fi
     done

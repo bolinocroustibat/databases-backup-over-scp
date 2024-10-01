@@ -13,7 +13,6 @@ create_local_folder() {
     local now=$(date -u +"%Y-%m-%d_%H-%M")
     local local_path="${LOCAL_PATH}${now}"
 
-
     if id "$POSTGRES_SYSTEM_USER" &>/dev/null; then
         # If we have a PostgreSQL system user, we create the folder as owned by it
         # so it can also be writable by the PostgreSQL script using the same folder
@@ -30,7 +29,7 @@ create_local_folder() {
         error "Error while creating local backup folder: $status"
         return 1
     else
-        success "Local backup folder $local_path created."
+        success "Local backup folder '$local_path' created."
         echo "$local_path"
         return 0
     fi
