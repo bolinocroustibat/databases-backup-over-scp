@@ -166,5 +166,4 @@ __pycache__/
 
 # Project specific
 config.yaml
-log-last-script.log
-log-last-cron.log
+*.log
