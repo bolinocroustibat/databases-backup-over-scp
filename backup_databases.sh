@@ -44,20 +44,32 @@ if [[ -n "$local_path" ]]; then
         error "mysqldump command not found. Not able to backup MySQL databases."
     fi
 
-    # Local PostgreSQL backup
-    postgres_dbs=$(config "postgres" "db_names")
-    for db in $postgres_dbs; do
-        db_filename="${db}.dump"
-        dump_cmd="su - ${POSTGRES_SYSTEM_USER} -c \"PGPASSWORD='${POSTGRES_PASSWD}' pg_dump ${db} -Fc -U ${POSTGRES_SYSTEM_USER} -p ${POSTGRES_PORT} > ${local_path}/${db_filename}\""
+    # Check if pg_dump command exists
+    if command -v pg_dump &> /dev/null; then
+        # Check if PostgreSQL system user exists
+        if id "$POSTGRES_SYSTEM_USER" &>/dev/null; then
+            # Local PostgreSQL backup
+            postgres_dbs=$(config "postgres" "db_names")
+            for db in $postgres_dbs; do
+                db_filename="${db}.dump"
+                dump_cmd="su - ${POSTGRES_SYSTEM_USER} -c \"PGPASSWORD='${POSTGRES_PASSWD}' pg_dump ${db} -Fc -U ${POSTGRES_SYSTEM_USER} -p ${POSTGRES_PORT} > ${local_path}/${db_filename}\""
 
-        if eval "$dump_cmd"; then
-            log "Backup dump file '${local_path}/${db_filename}' has been saved locally."
-            remote_copy "$local_path" "$db_filename"
+                if eval "$dump_cmd"; then
+                    log "Backup dump file '${local_path}/${db_filename}' has been saved locally."
+                    remote_copy "$local_path" "$db_filename"
+                else
+                    error "Error while trying to dump the PostgreSQL database '${db}' locally."
+                    exit 1
+                fi
+            done
         else
-            error "Error while trying to dump the PostgreSQL database '${db}' locally."
+            error "PostgreSQL system user '${POSTGRES_SYSTEM_USER}' does not exist. Not able to backup PostgreSQL databases."
             exit 1
         fi
-    done
+    else
+        error "pg_dump command not found. Not able to backup PostgreSQL databases."
+        exit 1
+    fi
 else
     error "Failed to create local backup folder. Exiting."
     exit 1
