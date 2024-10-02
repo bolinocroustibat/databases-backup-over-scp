@@ -2,10 +2,10 @@
 
 source helpers/load_config.sh
 
-BASE_LOGFILE=$(config "local" "logfile")
+LOG_PATH=$(config "local" "log_path")
 
 # Append the current date and time to the log file name
-LOGFILE="${BASE_LOGFILE}_$(date +'%Y-%m-%d_%H-%M').log"
+LOGFILE="${LOG_PATH}_$(date +'%Y-%m-%d_%H-%M').log"
 
 # Ensure the directory for the log file exists
 LOG_DIR=$(dirname "$LOGFILE")

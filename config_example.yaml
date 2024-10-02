@@ -14,10 +14,10 @@ mysql: # MySQL database details to which backup to be done
   user_password: ""  # MySQL user password
 
 local: # Local settings
-  path: /user/MyUser/databases-backup-over-scp/dumps/  # full local path where dumps will be saved, with trailing slash
-  logfile: /user/MyUser/databases-backup-over-scp/log-last-script.log  # full path to log file
+  path: /Users/MyUser/databases-backup-over-scp/dumps/  # full local path where dumps will be saved, with trailing slash
+  log_path: /Users/MyUser/databases-backup-over-scp/ # full local path where log files will be saved, with trailing slash
 
 remote: # Remote settings
   host: ""  # leave blank if you don't want to save remotely
   user: ""  # you need to be authorized on remote with your user SSH keys
-  path: /user/MyUser/backup-sql/  # full remote path where dumps will be saved
+  path: /Users/MyUser/backup-sql/  # full remote path where dumps will be saved
