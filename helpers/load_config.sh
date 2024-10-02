@@ -1,8 +1,33 @@
 #!/bin/bash
 
+install_yq() {
+    echo "yq not found. Installing..."
+
+    # Check the OS type and install yq accordingly
+    if command -v apt &> /dev/null; then
+        sudo apt update && sudo apt install -y yq
+    elif command -v brew &> /dev/null; then
+        brew install yq
+    elif command -v dnf &> /dev/null; then
+        sudo dnf install -y yq
+    elif command -v pacman &> /dev/null; then
+        sudo pacman -S --noconfirm yq
+    else
+        echo "Error: Package manager not supported. Please install yq manually."
+        return 1
+    fi
+
+    echo "yq installed successfully."
+}
+
 config() {
     local section="$1"
     local key="$2"
+
+    # Check for yq and install if not found
+    if ! command -v yq &> /dev/null; then
+        install_yq || return 1
+    fi
 
     # Validate inputs
     if [[ -z "$section" || -z "$key" ]]; then
