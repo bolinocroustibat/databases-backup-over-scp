@@ -1,8 +1,21 @@
-# Dependencies
+# Database backup over SCP
 
-Bash script used for MySQL/MariaDB/PostgreSQL databases backups over the network with SCP.
+Bash script used for MySQL/MariaDB/PostgreSQL databases backup to another machine over the network using SCP.
 
-# Configuration
+## Dependencies
+
+The script needs `yq` to parse the YAML settings file. You can install it with:
+```bash
+sudo apt-get install yq
+```
+
+It also needs either `mysqldump` or `pg_dump` to dump the MySQL and/or PostgreSQL databases. You can install them with:
+```bash
+sudo apt-get install mysql-client
+sudo apt-get install postgresql-client
+```
+
+## Configuration
 
 Create a `settings.yaml` file for your settings, based on `settings_example.yaml`, and fill in the settings according to the comments. If you don't want to save remotely, leave the `remote.host` empty.
 
@@ -15,14 +28,14 @@ chown -R postgres:postgres /home/myUser/dumps/
 Same on the distant server, don't forget to make the backup folder (whose path is `remote.path` in the settings file) writable by the SCP user (the `remote.user` in the settings file).
 
 
-# Run
+## Run
 
 Run the script with:
 ```bash
 sudo bash backup_databases.sh
 ```
 
-# Run with a cron
+## Run with a cron
 
 You can use the scripts with a Linux cron. Edit your root crontab with `crontab -e` and add those lines, for example:
 
