@@ -12,7 +12,7 @@ sudo apt-get install yq
 It also needs either `mysqldump` or `pg_dump` to dump the MySQL and/or PostgreSQL databases. You can install them with:
 ```bash
 sudo apt-get install mysql-client
-sudo apt-get install postgresql-client
+sudo apt-get install libq
 ```
 
 ## Configuration

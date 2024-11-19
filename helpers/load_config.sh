@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source helpers/check_deps.sh
+
 install_yq() {
     echo "yq not found. Installing..."
 
@@ -25,7 +27,7 @@ config() {
     local key="$2"
 
     # Check for yq and install if not found
-    if ! command -v yq &> /dev/null; then
+    if ! check_dependency "yq"; then
         install_yq || return 1
     fi
 
