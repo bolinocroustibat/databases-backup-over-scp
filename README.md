@@ -43,7 +43,7 @@ In this case, don't forget to make your script executable by your cron user, wit
 chmod +x main.py
 ```
 
-# Lint and frmat the code
+# Lint and format the code
 
 To lint, format and sort imports:
 ```bash
