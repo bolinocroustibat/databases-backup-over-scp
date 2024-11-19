@@ -2,6 +2,8 @@
 
 Bash script used for MySQL/MariaDB/PostgreSQL databases backup to another machine over the network using SCP.
 
+> 📝 **Note:** There is also a Python version of this script, in the [python branch of this repo](https://github.com/bolinocroustibat/databases-backup-over-scp/tree/python).
+
 ## Dependencies
 
 The script needs `yq` to parse the YAML settings file. You can install it with:
@@ -12,7 +14,7 @@ sudo apt-get install yq
 It also needs either `mysqldump` or `pg_dump` to dump the MySQL and/or PostgreSQL databases. You can install them with:
 ```bash
 sudo apt-get install mysql-client
-sudo apt-get install libq
+sudo apt-get install libpq
 ```
 
 ## Configuration
@@ -41,10 +43,10 @@ You can use the scripts with a Linux cron. Edit your root crontab with `crontab 
 
 ```
 # Backup databases every Monday and Thursday at 6:00
-0 6 * * 1,4 sh main.py > /root/database-backup-over-scp/log-last-cron.log
+0 6 * * 1,4 sh backup_databases.sh > /root/database-backup-over-scp/log-last-cron.log
 ```
 
 In this case, don't forget to make your script executable by your cron user, with something like this as your cron user:
 ```bash
-chmod +x main.py
+chmod +x backup_databases.sh
 ```
