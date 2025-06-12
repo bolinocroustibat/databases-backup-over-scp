@@ -1,3 +1,11 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# dependencies = [
+#     "paramiko<4.0.0,>=3.0.0",
+#     "scp<1.0.0,>=0.14.1",
+# ]
+# ///
+
 import os
 import subprocess
 
