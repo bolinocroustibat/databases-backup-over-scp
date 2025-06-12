@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from paramiko import SSHClient
 from scp import SCPClient
 
@@ -5,7 +7,7 @@ from settings import REMOTE_HOST
 
 
 def remote_copy(
-    logger, ssh_client: SSHClient, local_path: str, remote_path: str, db_filename: str
+    logger, ssh_client: SSHClient, local_path: Path, remote_path: Path, db_filename: str
 ) -> None:
     """
     Initiate distant file transfer.
@@ -16,10 +18,12 @@ def remote_copy(
         logger.debug(f"Starting SCP transfer of {db_filename} to {REMOTE_HOST}")
         scp = SCPClient(transport)
         try:
-            logger.debug(f"Copying {local_path}/{db_filename} to {remote_path}/{db_filename}")
+            local_file = local_path / db_filename
+            remote_file = str(remote_path / db_filename)
+            logger.debug(f"Copying {local_file} to {remote_file}")
             scp.put(
-                f"{local_path}/{db_filename}",
-                f"{remote_path}/{db_filename}",
+                str(local_file),
+                remote_file,
             )
             logger.success(f"Backup file '{db_filename}' has been copied on '{REMOTE_HOST}'")
         except Exception as e:

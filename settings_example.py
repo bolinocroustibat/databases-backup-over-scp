@@ -1,6 +1,8 @@
 # Logging settings
 LOG_LEVEL = "INFO"  # Available levels: DEBUG, INFO, WARNING, ERROR, SUCCESS
-LOGFILE = "log-last-script.log"  # log file will be created in the script's directory (relative path)
+LOGFILE = (
+    "log-last-script.log"  # log file will be created in the script's directory (relative path)
+)
 
 # PostgreSQL database details to which backup to be done.
 # Used only by backup-postgresql.py script.
@@ -50,4 +52,4 @@ LOCAL_PATH = "dumps/"  # local path where dumps will be saved, relative to the s
 # Remote settings
 REMOTE_HOST = ""  # leave blank if you don't want to save remotely.
 REMOTE_USER = ""  # you need to be authorized on remote with your user SSH keys.
-REMOTE_PATH = "/home/backup-sql/"  # full remote path where dumps will be saved.
+REMOTE_PATH = "/home/backup_sql/"  # full remote path where dumps will be saved.

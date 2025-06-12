@@ -7,6 +7,7 @@
 # ///
 
 import subprocess
+from pathlib import Path
 
 from helpers.create_local_folder import create_local_folder
 from helpers.logger import FileLogger
@@ -21,7 +22,7 @@ from settings import (
 logger = FileLogger()
 logger.debug("Script started")
 
-local_path: str | None = create_local_folder(logger)
+local_path: Path | None = create_local_folder(logger)
 
 if local_path:
     logger.debug(f"Local backup path created: {local_path}")
@@ -35,7 +36,7 @@ if local_path:
         logger.debug(f"Processing MySQL database: {db_name}")
         try:
             db_filename: str = f"{db_name}.sql.gz"
-            dump_cmd: str = f"mysqldump --user={db_config['user']} --password={db_config['password']} {db_name} | gzip -9 -c > {local_path}/{db_filename}"  # noqa E501
+            dump_cmd: str = f"mysqldump --user={db_config['user']} --password={db_config['password']} {db_name} | gzip -9 -c > {local_path / db_filename}"  # noqa E501
             logger.debug(f"Running MySQL dump command for {db_name}")
             result = subprocess.run(
                 dump_cmd, shell=True, capture_output=True, text=True, timeout=300
@@ -47,7 +48,7 @@ if local_path:
                 )
                 continue
 
-            logger.success(f"Backup file '{local_path}/{db_filename}' has been saved locally.")
+            logger.success(f"Backup file '{local_path / db_filename}' has been saved locally.")
 
             # Remote MySQL backup
             if REMOTE_HOST:
@@ -72,7 +73,7 @@ if local_path:
         logger.debug(f"Processing PostgreSQL database: {db_name}")
         try:
             db_filename: str = f"{db_name}.dump"
-            dump_cmd: str = f'PGPASSWORD="{db_config["password"]}" pg_dump {db_name} -Fc -U {db_config["user"]} -h 127.0.0.1 -p {db_config["port"]} > {local_path}/{db_filename}'  # noqa E501
+            dump_cmd: str = f'PGPASSWORD="{db_config["password"]}" pg_dump {db_name} -Fc -U {db_config["user"]} -h 127.0.0.1 -p {db_config["port"]} > {local_path / db_filename}'  # noqa E501
             logger.debug(f"Running PostgreSQL dump command for {db_name}")
             result = subprocess.run(
                 dump_cmd, shell=True, capture_output=True, text=True, timeout=300
@@ -84,7 +85,7 @@ if local_path:
                 )
                 continue
 
-            logger.success(f"Backup dump file '{local_path}/{db_filename}' has been saved locally.")
+            logger.success(f"Backup dump file '{local_path / db_filename}' has been saved locally.")
 
             # Remote PostgreSQL backup
             if REMOTE_HOST:

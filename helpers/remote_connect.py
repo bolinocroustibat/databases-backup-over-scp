@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Tuple
 
 from paramiko import SSHClient
@@ -6,13 +7,13 @@ from paramiko import SSHClient
 from settings import REMOTE_HOST, REMOTE_PATH, REMOTE_USER
 
 
-def remote_connect(logger) -> Tuple[SSHClient, str] | None:
+def remote_connect(logger) -> Tuple[SSHClient, Path] | None:
     """
     Returns SSH connection and path of created folder on remote server
     if creation of remote folder was successful
     """
     now: str = datetime.now(UTC).strftime("%Y-%m-%d_%H-%M")
-    remote_path = REMOTE_PATH + now
+    remote_path = Path(REMOTE_PATH) / now
     logger.debug(f"Connecting to remote host: {REMOTE_HOST}")
     try:
         # Connect to backup server
