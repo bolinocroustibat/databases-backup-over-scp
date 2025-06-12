@@ -1,18 +1,47 @@
 # PostgreSQL database details to which backup to be done.
 # Used only by backup-postgresql.py script.
-POSTGRES_DB_NAMES = ["db1_name", "db2_name"]  # PostgreSQL databases names to backup.
-POSTGRES_SYSTEM_USER = "postgres"  # make sure this system user has enough privileges to take all databases backup. # noqa E501
-POSTGRES_PASSWD = ""
-POSTGRES_PORT = 5432  # PostgreSQL port.
+POSTGRES_DEFAULT_PORT = 5432
+POSTGRES_DEFAULT_USER = (
+    "postgres"  # make sure this system user has enough privileges to take all databases backup.
+)
+POSTGRES_DEFAULT_PASSWORD = "postgres"
+
+POSTGRES_DATABASES = {
+    "db1_name": {
+        "user": POSTGRES_DEFAULT_USER,
+        "password": POSTGRES_DEFAULT_PASSWORD,
+        "port": POSTGRES_DEFAULT_PORT,
+    },
+    "db2_name": {
+        "user": "custom_user",  # example of custom user for specific database
+        "password": "custom_password",
+        "port": 5433,  # example of custom port
+    },
+}
 
 # MySQL database details to which backup to be done.
 # Used only by backup-mysql.py script.
-MYSQL_DB_NAMES = ["db1_name", "db2_name"]  # MySQL databases to backup
-MYSQL_USER = ""  # make sure this MySQL user has enough privileges to take all databases backup.
-MYSQL_USER_PASSWORD = ""
+MYSQL_DEFAULT_USER = (
+    ""  # make sure this MySQL user has enough privileges to take all databases backup.
+)
+MYSQL_DEFAULT_PASSWORD = ""
+MYSQL_DEFAULT_PORT = 3306
+
+MYSQL_DATABASES = {
+    "db1_name": {
+        "user": MYSQL_DEFAULT_USER,
+        "password": MYSQL_DEFAULT_PASSWORD,
+        "port": MYSQL_DEFAULT_PORT,
+    },
+    "db2_name": {
+        "user": "custom_user",  # example of custom user for specific database
+        "password": "custom_password",
+        "port": 3307,  # example of custom port
+    },
+}
 
 # Local setting
-LOCAL_PATH = "/root/databases-backup-over-scp/dumps/"  # full local path where dumps will be saved, with trailing slash. # noqa E501
+LOCAL_PATH = "/root/databases-backup-over-scp/dumps/"  # full local path where dumps will be saved, with trailing slash.
 LOGFILE = "/root/databases-backup-over-scp/log-last-script.log"  # full path to log file.
 
 # Remote settings

@@ -1,7 +1,7 @@
 import subprocess
 from datetime import UTC, datetime
 
-from settings import LOCAL_PATH, POSTGRES_SYSTEM_USER
+from settings import LOCAL_PATH, POSTGRES_DEFAULT_USER
 
 
 def create_local_folder(logger) -> str | None:
@@ -11,10 +11,10 @@ def create_local_folder(logger) -> str | None:
     """
     now: str = datetime.now(UTC).strftime("%Y-%m-%d_%H-%M")
     local_path = LOCAL_PATH + now
-    if POSTGRES_SYSTEM_USER:
+    if POSTGRES_DEFAULT_USER:
         # If we have a postgre system user, we create the folder as owned by it
         # so it can also be writable by the postgresql script using the same folder
-        cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "mkdir -p {local_path}"'
+        cmd: str = f'su - {POSTGRES_DEFAULT_USER} -c "mkdir -p {local_path}"'
     else:
         cmd: str = f"mkdir -p {local_path}"
     proc = subprocess.Popen(

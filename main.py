@@ -6,13 +6,8 @@ from helpers.logger import FileLogger
 from helpers.remote_connect import remote_connect
 from helpers.remote_copy import remote_copy
 from settings import (
-    MYSQL_DB_NAMES,
-    MYSQL_USER,
-    MYSQL_USER_PASSWORD,
-    POSTGRES_DB_NAMES,
-    POSTGRES_PASSWD,
-    POSTGRES_PORT,
-    POSTGRES_SYSTEM_USER,
+    MYSQL_DATABASES,
+    POSTGRES_DATABASES,
     REMOTE_HOST,
 )
 
@@ -26,14 +21,14 @@ if local_path:
     remote_path = None
 
     # Local MySQL backup
-    for db in MYSQL_DB_NAMES:
+    for db_name, db_config in MYSQL_DATABASES.items():
         try:
-            db_filename: str = f"{db}.sql.gz"
-            dump_cmd: str = f"mysqldump --user={MYSQL_USER} --password={MYSQL_USER_PASSWORD} {db} | gzip -9 -c > {local_path}/{db_filename}"  # noqa E501
+            db_filename: str = f"{db_name}.sql.gz"
+            dump_cmd: str = f"mysqldump --user={db_config['user']} --password={db_config['password']} --port={db_config['port']} {db_name} | gzip -9 -c > {local_path}/{db_filename}"  # noqa E501
             os.system(dump_cmd)
         except Exception as e:
             logger.error(
-                f"Error while trying to dump the database '{db}' locally: {str(e)}"  # noqa E501
+                f"Error while trying to dump the database '{db_name}' locally: {str(e)}"  # noqa E501
             )
         else:
             logger.success(f"Backup file '{local_path}/{db_filename}' has been saved locally.")
@@ -48,16 +43,16 @@ if local_path:
                     logger.error("Couldn't copy on server, couldn't get SSH connection.")
 
     # Local PostgreSQL backup
-    for db in POSTGRES_DB_NAMES:
-        db_filename: str = f"{db}.dump"
-        dump_cmd: str = f'su - {POSTGRES_SYSTEM_USER} -c "PGPASSWORD="{POSTGRES_PASSWD}" pg_dump {db} -Fc -U {POSTGRES_SYSTEM_USER} -p {POSTGRES_PORT} > {local_path}/{db_filename}"'  # noqa E501
+    for db_name, db_config in POSTGRES_DATABASES.items():
+        db_filename: str = f"{db_name}.dump"
+        dump_cmd: str = f'su - {db_config["user"]} -c "PGPASSWORD="{db_config["password"]}" pg_dump {db_name} -Fc -U {db_config["user"]} -p {db_config["port"]} > {local_path}/{db_filename}"'  # noqa E501
         proc = subprocess.Popen(dump_cmd, shell=True)
         proc.wait()
         (stdout, stderr) = proc.communicate()
 
         if stderr:
             logger.error(
-                f"Error while trying to dump the database {db} locally: {stderr.decode()}"  # noqa E501
+                f"Error while trying to dump the database {db_name} locally: {stderr.decode()}"  # noqa E501
             )
         else:
             logger.success(f"Backup dump file '{local_path}/{db_filename}' has been saved locally.")
