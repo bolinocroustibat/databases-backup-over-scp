@@ -11,12 +11,17 @@ def create_local_folder(logger) -> str | None:
     """
     now: str = datetime.now(UTC).strftime("%Y-%m-%d_%H-%M")
     local_path = LOCAL_PATH + now
+    logger.debug(f"Creating local backup folder: {local_path}")
+
     if POSTGRES_DEFAULT_USER:
+        logger.debug(f"Using PostgreSQL user: {POSTGRES_DEFAULT_USER}")
         # If we have a postgre system user, we create the folder as owned by it
         # so it can also be writable by the postgresql script using the same folder
         cmd: str = f'su - {POSTGRES_DEFAULT_USER} -c "mkdir -p {local_path}"'
     else:
+        logger.debug("Using default mkdir command")
         cmd: str = f"mkdir -p {local_path}"
+
     proc = subprocess.Popen(
         cmd,
         shell=True,
@@ -28,7 +33,7 @@ def create_local_folder(logger) -> str | None:
 
     if stderr:
         logger.error(f"Error while creating local backup folder: {stderr.decode()}")
+        return None
 
-    else:
-        logger.success(f"Local backup folder {local_path} created.")
-        return local_path
+    logger.success(f"Local backup folder {local_path} created.")
+    return local_path

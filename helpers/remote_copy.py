@@ -13,8 +13,10 @@ def remote_copy(
     """
     transport = ssh_client.get_transport()
     if transport:
+        logger.debug(f"Starting SCP transfer of {db_filename} to {REMOTE_HOST}")
         scp = SCPClient(transport)
         try:
+            logger.debug(f"Copying {local_path}/{db_filename} to {remote_path}/{db_filename}")
             scp.put(
                 f"{local_path}/{db_filename}",
                 f"{remote_path}/{db_filename}",
