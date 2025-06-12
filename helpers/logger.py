@@ -44,27 +44,27 @@ class FileLogger:
 
     def log(self, message: str) -> None:
         if self._should_log("INFO"):
-            print(f"{self.PURPLE}{message}{self.ENDC}")
+            print(f"{self.PURPLE}ℹ️ {message}{self.ENDC}")
             self.log_write_file(message)
 
     def debug(self, message: str) -> None:
         if self._should_log("DEBUG"):
-            print(f"{self.CYAN}{message}{self.ENDC}")
+            print(f"{self.CYAN}🔍 {message}{self.ENDC}")
             self.log_write_file(message)
 
     def warning(self, message: str) -> None:
         if self._should_log("WARNING"):
-            print(f"{self.YELLOW}{message}{self.ENDC}")
+            print(f"{self.YELLOW}⚠️ {message}{self.ENDC}")
             self.log_write_file(message)
 
     def error(self, message: str) -> None:
         if self._should_log("ERROR"):
-            print(f"{self.RED}{message}{self.ENDC}")
+            print(f"{self.RED}❌ {message}{self.ENDC}")
             self.log_write_file(message)
 
     def success(self, message: str) -> None:
         if self._should_log("SUCCESS"):
-            print(f"{self.GREEN}{message}{self.ENDC}")
+            print(f"{self.GREEN}✅ {message}{self.ENDC}")
             self.log_write_file(message)
 
     def close(self) -> None:
