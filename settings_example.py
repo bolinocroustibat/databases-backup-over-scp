@@ -1,6 +1,6 @@
 # Logging settings
 LOG_LEVEL = "INFO"  # Available levels: DEBUG, INFO, WARNING, ERROR, SUCCESS
-LOGFILE = "/root/databases-backup-over-scp/log-last-script.log"  # full path to log file.
+LOGFILE = "log-last-script.log"  # log file will be created in the script's directory (relative path)
 
 # PostgreSQL database details to which backup to be done.
 # Used only by backup-postgresql.py script.
@@ -45,7 +45,7 @@ MYSQL_DATABASES = {
 }
 
 # Local setting
-LOCAL_PATH = "/root/databases-backup-over-scp/dumps/"  # full local path where dumps will be saved, with trailing slash.
+LOCAL_PATH = "dumps/"  # local path where dumps will be saved, relative to the script's directory
 
 # Remote settings
 REMOTE_HOST = ""  # leave blank if you don't want to save remotely.
