@@ -84,10 +84,12 @@ if local_path:
         try:
             db_filename: str = f"{db_name}.dump"
             dump_file = (local_path / db_filename).resolve()
-            # Run pg_dump as system user postgres so it can connect; dump file is written by postgres (folder has group postgres + 2775).
+            # Run pg_dump as the postgres system user for DB auth; stdout is
+            # redirected by the shell so the dump file is owned by the current
+            # user (no chgrp / setgid needed on the backup folder).
             dump_cmd: str = (
                 f'sudo -u {POSTGRES_DEFAULT_USER} env PGPASSWORD="{db_config["password"]}" '
-                f'pg_dump {db_name} -Fc -U {db_config["user"]} -h 127.0.0.1 -p {db_config["port"]} -f {dump_file}'
+                f'pg_dump {db_name} -Fc -U {db_config["user"]} -h 127.0.0.1 -p {db_config["port"]} > {dump_file}'
             )
             logger.debug(f"Running PostgreSQL dump command for {db_name}")
             result = subprocess.run(

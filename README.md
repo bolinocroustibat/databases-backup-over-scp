@@ -29,17 +29,7 @@ POSTGRES_DATABASES = {
 
 Don't forget to make the local directory where the dumps will be saved (whose path is `LOCAL_PATH` in the settings file) writable by the user running the script.
 
-**PostgreSQL:** the script runs as your user but executes `pg_dump` as the system user `postgres` (via `sudo -u postgres`). The user running the script must be in the sudoers and in the group `postgres` (for `chgrp` when creating the folder). Add yourself to the group then re-login:
-```sh
-sudo usermod -aG postgres $USER
-# log out and back in, or newgrp postgres
-```
-
-If the base directory was previously owned by `postgres` (e.g. after upgrading from an older version), fix it once so the script can create subdirs again; otherwise the script sets group and permissions automatically on each run:
-```sh
-sudo chown -R $USER:postgres /path/to/LOCAL_PATH
-sudo chmod -R 2775 /path/to/LOCAL_PATH
-```
+**PostgreSQL:** the script runs as your user but executes `pg_dump` as the system user `postgres` (via `sudo -u postgres`). The dump output is piped through stdout so the resulting file is owned by your user — no special group membership is required. The user running the script only needs to be in the sudoers for the `sudo -u postgres` command.
 
 Same on the distant server, don't forget to make the backup folder (whose path is `REMOTE_PATH` in the settings file) writable by the SCP user (the `REMOTE_USER` in the settings file).
 
