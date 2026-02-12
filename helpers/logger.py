@@ -1,6 +1,13 @@
 from datetime import UTC, datetime
+from pathlib import Path
 
-from settings import LOG_LEVEL, LOGFILE
+from settings import LOG_LEVEL
+
+
+def _get_dated_logfile_path() -> Path:
+    """Return log file path: logs/YYYY-MM-DD.log (relative to cwd)."""
+    date_str = datetime.now(UTC).strftime("%Y-%m-%d")
+    return Path("logs") / f"{date_str}.log"
 
 
 class FileLogger:
@@ -25,10 +32,12 @@ class FileLogger:
 
     def __init__(self) -> None:
         """
-        Open log file
+        Open log file (one file per day, e.g. logs/2025-02-12.log)
         https://stackoverflow.com/questions/2513479/redirect-prints-to-log-file
         """
-        self.log_file = open(LOGFILE, "w")
+        log_path = _get_dated_logfile_path()
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        self.log_file = open(log_path, "a")
         self.min_level = self.LEVELS.get(LOG_LEVEL, self.LEVELS["INFO"])
 
     def _should_log(self, level: str) -> bool:

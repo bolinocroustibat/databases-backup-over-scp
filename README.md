@@ -84,7 +84,7 @@ Add a line like:
 0 2 * * * cd /chemin/vers/databases-backup-over-scp && uv run main.py >> log-last-cron.log 2>&1
 ```
 
-Or with the script’s own log file only (the script already logs to `log-last-script.log` via `LOGFILE` in settings):
+Or with the script’s own log file only (the script logs to dated files in `logs/` (e.g. `logs/2025-02-12.log`):
 
 ```
 0 2 * * * cd /chemin/vers/databases-backup-over-scp && uv run main.py

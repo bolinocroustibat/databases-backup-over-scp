@@ -167,5 +167,5 @@ __pycache__/
 # Project specific
 settings.py
 settings.pyc
-log-last-script.log
+logs/
 log-last-cron.log

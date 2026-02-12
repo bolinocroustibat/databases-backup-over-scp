@@ -1,8 +1,5 @@
 # Logging settings
 LOG_LEVEL = "INFO"  # Available levels: DEBUG, INFO, WARNING, ERROR, SUCCESS
-LOGFILE = (
-    "log-last-script.log"  # log file will be created in the script's directory (relative path)
-)
 
 # PostgreSQL database details to which backup to be done.
 # Used only by backup-postgresql.py script.
