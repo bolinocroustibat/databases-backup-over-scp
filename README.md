@@ -35,6 +35,17 @@ chown -R postgres:postgres /root/dumps/
 
 Same on the distant server, don't forget to make the backup folder (whose path is `REMOTE_PATH` in the settings file) writable by the SCP user (the `REMOTE_USER` in the settings file).
 
+# Retention (GFS)
+
+The script can apply a **Grandfather-Father-Son** retention policy after each backup (enable with `RETENTION_ENABLED = True` in `settings.py`):
+
+- **Son (daily)**: one backup per day is kept for the last N days (default: 7).
+- **Father (weekly)**: the backup of the chosen weekday (e.g. Sunday) is kept for the last N weeks (default: 4). Set to 0 to disable.
+- **Grandfather (monthly)**: the backup of the 1st of each month is kept for the last N months (default: 12).
+- **Great-grandfather (yearly)**: the backup of 1st January is kept for the last N years. Set to 4 for “7 days, no weekly, 12 months, 4 years”. Set to 0 to disable (default).
+
+Only backup folders whose names match `YYYY-MM-DD_HH-MM` are considered. Retention is applied locally and on the remote host when configured.
+
 # Run
 
 The script is self-executable with [uv](https://docs.astral.sh/uv/). Just make it executable and run it:
@@ -50,12 +61,36 @@ uv run main.py
 
 # Run with a cron
 
-You can use the scripts with a Linux cron. Edit your root crontab with `crontab -e` and add those lines, for example:
+With the GFS retention policy, **run the script once per day**. The retention logic uses the backup folder date (from its name `YYYY-MM-DD_HH-MM`), so:
+
+- Every run creates a daily backup; the last 7 days are kept (Son).
+- The run that falls on Sunday is also kept as weekly (Father), if `RETENTION_WEEKLY_WEEKS > 0`.
+- The run that falls on the 1st of the month is also kept as monthly (Grandfather).
+- The run that falls on 1 January is also kept as yearly (Great-grandfather), if `RETENTION_YEARLY_YEARS > 0`.
+
+One cron entry is enough; no need for separate “daily”, “weekly” or “monthly” jobs.
+
+Example: run every day at 2:00 AM (server timezone). Adjust the path to your install directory:
+
+```bash
+# Edit crontab (e.g. for the user that owns the backup dir and has DB access)
+crontab -e
+```
+
+Add a line like:
 
 ```
-# Backup databases every Monday and Thursday at 6:00
-0 6 * * 1,4 /root/database-backup-over-scp/main.py > /root/database-backup-over-scp/log-last-cron.log
+# Daily backup at 2:00 AM; stdout and stderr go to the log file
+0 2 * * * cd /chemin/vers/databases-backup-over-scp && uv run main.py >> log-last-cron.log 2>&1
 ```
+
+Or with the script’s own log file only (the script already logs to `log-last-script.log` via `LOGFILE` in settings):
+
+```
+0 2 * * * cd /chemin/vers/databases-backup-over-scp && uv run main.py
+```
+
+Use an absolute path for `cd` so the script always runs in the right directory (and `LOCAL_PATH` in settings is relative to that).
 
 # Lint and format the code
 

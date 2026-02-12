@@ -13,10 +13,19 @@ from helpers.create_local_folder import create_local_folder
 from helpers.logger import FileLogger
 from helpers.remote_connect import remote_connect
 from helpers.remote_copy import remote_copy
+from helpers.retention import run_retention_local, run_retention_remote
 from settings import (
+    LOCAL_PATH,
     MYSQL_DATABASES,
     POSTGRES_DATABASES,
     REMOTE_HOST,
+    REMOTE_PATH,
+    RETENTION_DAILY_DAYS,
+    RETENTION_ENABLED,
+    RETENTION_MONTHLY_MONTHS,
+    RETENTION_WEEKLY_DAY,
+    RETENTION_WEEKLY_WEEKS,
+    RETENTION_YEARLY_YEARS,
 )
 
 logger = FileLogger()
@@ -102,6 +111,35 @@ if local_path:
             logger.error(
                 f"Error while trying to dump the database {db_name} locally: {str(e)}"  # noqa E501
             )
+
+    # GFS retention (Grandfather-Father-Son)
+    if RETENTION_ENABLED and local_path:
+        base = Path(LOCAL_PATH)
+        run_retention_local(
+            base,
+            logger,
+            daily_days=RETENTION_DAILY_DAYS,
+            weekly_weeks=RETENTION_WEEKLY_WEEKS,
+            weekly_weekday=RETENTION_WEEKLY_DAY,
+            monthly_months=RETENTION_MONTHLY_MONTHS,
+            yearly_years=RETENTION_YEARLY_YEARS,
+        )
+        if REMOTE_HOST and ssh_client:
+            run_retention_remote(
+                ssh_client,
+                str(REMOTE_PATH),
+                logger,
+                daily_days=RETENTION_DAILY_DAYS,
+                weekly_weeks=RETENTION_WEEKLY_WEEKS,
+                weekly_weekday=RETENTION_WEEKLY_DAY,
+                monthly_months=RETENTION_MONTHLY_MONTHS,
+                yearly_years=RETENTION_YEARLY_YEARS,
+            )
+    if local_path and ssh_client:
+        try:
+            ssh_client.close()
+        except Exception:
+            pass
 
 logger.log("Backup script completed.")
 logger.close()

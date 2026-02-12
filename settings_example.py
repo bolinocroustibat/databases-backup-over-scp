@@ -53,3 +53,21 @@ LOCAL_PATH = "dumps/"  # local path where dumps will be saved, relative to the s
 REMOTE_HOST = ""  # leave blank if you don't want to save remotely.
 REMOTE_USER = ""  # you need to be authorized on remote with your user SSH keys.
 REMOTE_PATH = "/home/backup_sql/"  # full remote path where dumps will be saved.
+
+# GFS retention (Grandfather-Father-Son). Applied after each backup if RETENTION_ENABLED is True.
+# Son (daily): one backup per day, keep the last N days.
+# Father (weekly): backup on RETENTION_WEEKLY_DAY (e.g. Sunday), keep the last N weeks. Use 0 to disable.
+# Grandfather (monthly): backup on the 1st of the month, keep the last N months.
+# Great-grandfather (yearly): backup on 1st January, keep the last N years. Use 0 to disable.
+#
+# Example: 7 days, no weekly, 12 months, 4 years:
+#   RETENTION_DAILY_DAYS = 7
+#   RETENTION_WEEKLY_WEEKS = 0
+#   RETENTION_MONTHLY_MONTHS = 12
+#   RETENTION_YEARLY_YEARS = 4
+RETENTION_ENABLED = True
+RETENTION_DAILY_DAYS = 7
+RETENTION_WEEKLY_WEEKS = 4
+RETENTION_WEEKLY_DAY = 6  # 0=Monday, 6=Sunday
+RETENTION_MONTHLY_MONTHS = 12
+RETENTION_YEARLY_YEARS = 0  # set to 4 to keep the last 4 years (1st Jan each year)
