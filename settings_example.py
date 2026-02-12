@@ -6,11 +6,11 @@ LOGFILE = (
 
 # PostgreSQL database details to which backup to be done.
 # Used only by backup-postgresql.py script.
-POSTGRES_DEFAULT_PORT = 5432
 POSTGRES_DEFAULT_USER = (
     "postgres"  # make sure this system user has enough privileges to take all databases backup.
 )
 POSTGRES_DEFAULT_PASSWORD = "postgres"
+POSTGRES_DEFAULT_PORT = 5432
 
 POSTGRES_DATABASES = {
     "db1_name": {
