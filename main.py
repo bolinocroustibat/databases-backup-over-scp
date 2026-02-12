@@ -18,6 +18,7 @@ from settings import (
     LOCAL_PATH,
     MYSQL_DATABASES,
     POSTGRES_DATABASES,
+    POSTGRES_DEFAULT_USER,
     REMOTE_HOST,
     REMOTE_PATH,
     RETENTION_DAILY_DAYS,
@@ -82,7 +83,12 @@ if local_path:
         logger.debug(f"Processing PostgreSQL database: {db_name}")
         try:
             db_filename: str = f"{db_name}.dump"
-            dump_cmd: str = f'PGPASSWORD="{db_config["password"]}" pg_dump {db_name} -Fc -U {db_config["user"]} -h 127.0.0.1 -p {db_config["port"]} > {local_path / db_filename}'  # noqa E501
+            dump_file = (local_path / db_filename).resolve()
+            # Run pg_dump as system user postgres so it can connect; dump file is written by postgres (folder has group postgres + 2775).
+            dump_cmd: str = (
+                f'sudo -u {POSTGRES_DEFAULT_USER} env PGPASSWORD="{db_config["password"]}" '
+                f'pg_dump {db_name} -Fc -U {db_config["user"]} -h 127.0.0.1 -p {db_config["port"]} -f {dump_file}'
+            )
             logger.debug(f"Running PostgreSQL dump command for {db_name}")
             result = subprocess.run(
                 dump_cmd, shell=True, capture_output=True, text=True, timeout=300

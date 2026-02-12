@@ -168,4 +168,3 @@ __pycache__/
 settings.py
 settings.pyc
 logs/
-log-last-cron.log
