@@ -50,6 +50,7 @@ class FileLogger:
         """
         time: str = datetime.now(UTC).strftime("%m/%d %H:%M:%S/%f")[:17]
         self.log_file.write(f"{time}: {message}\n")
+        self.log_file.flush()
 
     def log(self, message: str) -> None:
         if self._should_log("INFO"):

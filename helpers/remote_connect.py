@@ -1,3 +1,4 @@
+import shlex
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Tuple
@@ -26,15 +27,15 @@ def remote_connect(logger) -> Tuple[SSHClient, Path] | None:
         logger.error(f"Error while connecting to remote '{REMOTE_HOST}': {str(e)}")
 
     else:
-        # Create remote backup folder
+        # Create remote backup folder (quote path for safety with spaces/special chars)
         try:
             logger.debug(f"Creating remote backup folder: {remote_path}")
-            ssh_client.exec_command(f"mkdir -p {remote_path}")
-            ssh_client.close
+            ssh_client.exec_command(f"mkdir -p {shlex.quote(str(remote_path))}")
             logger.success(f"Remote backup folder {remote_path} created on '{REMOTE_HOST}'")
         except Exception as e:
             logger.error(
-                f"Error while creating remote backup folder '{remote_path}' on '{REMOTE_HOST}': {str(e)}"  # noqa E501
+                f"Error while creating remote backup folder '{remote_path}' on '{REMOTE_HOST}': {str(e)}"
             )
+            ssh_client.close()
         else:
             return ssh_client, remote_path

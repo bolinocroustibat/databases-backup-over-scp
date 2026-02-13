@@ -8,6 +8,7 @@ GFS (Grandfather-Father-Son) retention policy for backup folders.
 """
 
 import re
+import shlex
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -61,18 +62,14 @@ def compute_folders_to_keep(
             keep.add(name)
 
     # Grandfather (monthly): first day of month, keep monthly_months (excluding yearly)
-    monthly = [
-        (n, d) for n, d in sorted_folders if d.day == 1 and n not in keep
-    ]
+    monthly = [(n, d) for n, d in sorted_folders if d.day == 1 and n not in keep]
     for name, _ in monthly[:monthly_months]:
         keep.add(name)
 
     # Father (weekly): chosen weekday, keep weekly_weeks (excluding already kept)
     if weekly_weeks > 0:
         weekly = [
-            (n, d)
-            for n, d in sorted_folders
-            if d.weekday() == weekly_weekday and n not in keep
+            (n, d) for n, d in sorted_folders if d.weekday() == weekly_weekday and n not in keep
         ]
         for name, _ in weekly[:weekly_weeks]:
             keep.add(name)
@@ -166,7 +163,7 @@ def apply_retention_remote(
                 if name in keep_folders or parse_backup_folder_name(name) is None:
                     continue
                 full_path = f"{base_path.rstrip('/')}/{name}"
-                stdin, stdout, stderr = ssh_client.exec_command(f"rm -rf {full_path}")
+                stdin, stdout, stderr = ssh_client.exec_command(f"rm -rf {shlex.quote(full_path)}")
                 stdout.channel.recv_exit_status()
                 err = stderr.read().decode().strip()
                 if err:

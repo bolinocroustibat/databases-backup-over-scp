@@ -44,7 +44,9 @@ MYSQL_DATABASES = {
 }
 
 # Local setting
-LOCAL_PATH = "sql_dumps/"  # local path where dumps will be saved, relative to the script's directory
+LOCAL_PATH = (
+    "sql_dumps/"  # local path where dumps will be saved, relative to the script's directory
+)
 
 # Remote settings
 REMOTE_HOST = ""  # leave blank if you don't want to save remotely.
