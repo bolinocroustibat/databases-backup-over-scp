@@ -1,0 +1,43 @@
+# Create a GitHub Release when a version tag is pushed.
+# Release version is taken from the tag; notes are auto-generated.
+# Supports both tag styles: v0.7.0 or 0.7.0
+#
+# Usage:
+#   git tag 0.7.0   # or  git tag v0.7.0
+#   git push origin 0.7.0
+
+name: Create a Release on tag push
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          VERSION="${VERSION#v}"   # strip optional leading v (v0.7.0 → 0.7.0)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

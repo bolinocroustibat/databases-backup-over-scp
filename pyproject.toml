@@ -1,6 +1,6 @@
 [project]
 name = "databases-backup-over-scp"
-version = "0.6.0"
+dynamic = ["version"]
 description = "Python script for remote backups of MySQL and PostgreSQL databases over SCP"
 authors = [{ name = "Adrien Carpentier", email = "me@adriencarpentier.com" }]
 dependencies = [

@@ -90,6 +90,15 @@ Or with the script’s own log file only (the script logs to dated files in `log
 
 Use an absolute path for `cd` so the script always runs in the right directory (and `LOCAL_PATH` in settings is relative to that).
 
+# 🚀 Releasing
+
+Push a version tag to create a GitHub Release (version from the tag; release notes are generated automatically). See the repo’s **Releases** page after pushing.
+
+```bash
+git tag v0.7.0
+git push origin v0.7.0
+```
+
 # 🤝 Contributing
 
 Before contributing to the repository and making any PR, it is necessary to initialize the pre-commit hooks:
