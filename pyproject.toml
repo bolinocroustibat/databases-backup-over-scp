@@ -4,7 +4,7 @@ version = "0.5.1"
 description = "Python script for remote backups of MySQL and PostgreSQL databases over SCP"
 authors = [{ name = "Adrien Carpentier", email = "me@adriencarpentier.com" }]
 dependencies = [
-    "paramiko<4.0.0,>=3.0.0",
+    "paramiko<5.0.0,>=3.0.0",
     "scp<1.0.0,>=0.14.1",
 ]
 requires-python = ">=3.10,<3.15"
@@ -16,6 +16,6 @@ lint = { extend-select = ["I"] }
 
 [dependency-groups]
 dev = [
-    "ruff>=0.12.11",
+    "ruff>=0.15.1",
     "ty>=0.0.16",
 ]

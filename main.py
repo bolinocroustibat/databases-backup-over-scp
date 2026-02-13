@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # dependencies = [
-#     "paramiko<4.0.0,>=3.0.0",
+#     "paramiko<5.0.0,>=3.0.0",
 #     "scp<1.0.0,>=0.14.1",
 # ]
 # ///
@@ -89,7 +89,7 @@ if local_path:
             # user (no chgrp / setgid needed on the backup folder).
             dump_cmd: str = (
                 f'sudo -u {POSTGRES_DEFAULT_USER} env PGPASSWORD="{db_config["password"]}" '
-                f'pg_dump {db_name} -Fc -U {db_config["user"]} -h 127.0.0.1 -p {db_config["port"]} > {dump_file}'
+                f"pg_dump {db_name} -Fc -U {db_config['user']} -h 127.0.0.1 -p {db_config['port']} > {dump_file}"
             )
             logger.debug(f"Running PostgreSQL dump command for {db_name}")
             result = subprocess.run(
