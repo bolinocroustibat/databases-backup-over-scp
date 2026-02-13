@@ -1,8 +1,8 @@
-# Dependencies
+# 📦 Dependencies
 
 Python script used for MySQL/MariaDB/PostgreSQL databases backups, using Python3 (>=3.10), mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
 
-# Configuration
+# ⚙️ Configuration
 
 Create a `settings.py` file for your settings, based on `settings_example.py`, and fill in the settings according to the comments. If you don't want to save remotely, leave the `REMOTE_HOST` empty.
 
@@ -33,7 +33,7 @@ Don't forget to make the local directory where the dumps will be saved (whose pa
 
 Same on the distant server, don't forget to make the backup folder (whose path is `REMOTE_PATH` in the settings file) writable by the SCP user (the `REMOTE_USER` in the settings file).
 
-# Retention (GFS)
+# 📅 Retention (GFS)
 
 The script can apply a **Grandfather-Father-Son** retention policy after each backup (enable with `RETENTION_ENABLED = True` in `settings.py`):
 
@@ -44,7 +44,7 @@ The script can apply a **Grandfather-Father-Son** retention policy after each ba
 
 Only backup folders whose names match `YYYY-MM-DD_HH-MM` are considered. Retention is applied locally and on the remote host when configured.
 
-# Run
+# ▶️ Run
 
 The script is self-executable with [uv](https://docs.astral.sh/uv/). Just make it executable and run it:
 ```bash
@@ -57,7 +57,7 @@ Or run it directly with uv:
 uv run main.py
 ```
 
-# Run with a cron
+# ⏰ Run with a cron
 
 With the GFS retention policy, **run the script once per day**. The retention logic uses the backup folder date (from its name `YYYY-MM-DD_HH-MM`), so:
 
@@ -79,20 +79,26 @@ Add a line like:
 
 ```
 # Daily backup at 2:00 AM; stdout and stderr go to the log file
-0 2 * * * cd /chemin/vers/databases-backup-over-scp && uv run main.py >> log-last-cron.log 2>&1
+0 2 * * * cd /path/to/databases-backup-over-scp && uv run main.py >> cron.log 2>&1
 ```
 
 Or with the script’s own log file only (the script logs to dated files in `logs/` (e.g. `logs/2025-02-12.log`):
 
 ```
-0 2 * * * cd /chemin/vers/databases-backup-over-scp && uv run main.py
+0 2 * * * cd /path/to/databases-backup-over-scp && uv run main.py
 ```
 
 Use an absolute path for `cd` so the script always runs in the right directory (and `LOCAL_PATH` in settings is relative to that).
 
-# Lint and format the code
+# 🤝 Contributing
 
-To lint, format and sort imports:
+Before contributing to the repository and making any PR, it is necessary to initialize the pre-commit hooks:
 ```bash
-uvx ruff check --fix && uvx ruff format
+pre-commit install
+```
+Once this is done, code formatting and linting, as well as import sorting, will be automatically checked before each commit.
+
+If you cannot use pre-commit, it is necessary to format, lint, and sort imports with [Ruff](https://docs.astral.sh/ruff/) before committing:
+```bash
+uv run ruff check --fix . && uv run ruff format .
 ```
