@@ -216,7 +216,6 @@ wheels = [
 
 [[package]]
 name = "databases-backup-over-scp"
-version = "0.6.0"
 source = { virtual = "." }
 dependencies = [
     { name = "paramiko" },
