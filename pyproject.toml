@@ -7,7 +7,7 @@ dependencies = [
     "paramiko<6.0.0,>=4.0.0",
     "scp<1.0.0,>=0.14.1",
 ]
-requires-python = ">=3.10,<3.15"
+requires-python = ">=3.11,<3.15"
 license = { text = "MIT" }
 
 [tool.ruff]

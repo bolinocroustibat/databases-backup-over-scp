@@ -1,6 +1,6 @@
 # 📦 Dependencies
 
-Python script used for MySQL/MariaDB/PostgreSQL databases backups, using Python3 (>=3.10), mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
+Python script used for MySQL/MariaDB/PostgreSQL databases backups, using Python3 (>=3.11), mysqldump utility, pg_dump, Paramiko/SSHClient and Paramiko/SCPClient.
 
 # ⚙️ Configuration
 
