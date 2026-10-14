@@ -46,15 +46,19 @@ MYSQL_DEFAULT_PASSWORD = ""
 MYSQL_DEFAULT_PORT = 3306
 
 MYSQL_DATABASES = {
+    # Example: local MySQL with the default user, password, and port.
     "db1_name": {
         "user": MYSQL_DEFAULT_USER,
         "password": MYSQL_DEFAULT_PASSWORD,
         "port": MYSQL_DEFAULT_PORT,
     },
+    # Example: custom user, port, and dump timeout.
+    # timeout is optional, in seconds (default 300). Raise it for large dumps.
     "db2_name": {
-        "user": "custom_user",  # example of custom user for specific database
+        "user": "custom_user",
         "password": "custom_password",
-        "port": 3307,  # example of custom port
+        "port": 3307,
+        "timeout": 120,
     },
 }
 

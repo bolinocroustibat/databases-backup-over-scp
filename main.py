@@ -47,10 +47,11 @@ if local_path:
         try:
             db_filename: str = f"{db_name}.sql.gz"
             dump_cmd: str = f"mysqldump --user={db_config['user']} --password={db_config['password']} {db_name} | gzip -9 -c > {local_path / db_filename}"  # noqa E501
+            dump_timeout = int(db_config.get("timeout", 300))
             logger.debug(f"Running MySQL dump command for {db_name}")
             result = subprocess.run(
-                dump_cmd, shell=True, capture_output=True, text=True, timeout=300
-            )  # 5 minutes timeout
+                dump_cmd, shell=True, capture_output=True, text=True, timeout=dump_timeout
+            )
 
             if result.returncode != 0:
                 logger.error(

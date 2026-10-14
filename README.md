@@ -45,7 +45,7 @@ Don't forget to make the local directory where the dumps will be saved (whose pa
 
 **PostgreSQL in Docker:** use this when PostgreSQL runs in a container **without a port published on the host** (only reachable on Docker's internal network). Set `container` to the container name: the script runs that container's `pg_dump` with `sudo docker exec` and no `-t`, so the client talks to the server inside the container (local socket / loopback). A dump via `127.0.0.1` on the host would fail in that setup because nothing listens on the host. The container client also matches the server major version (for example PostgreSQL 17); the host `pg_dump` may be too old. Custom format (`-Fc`) is binary, and a TTY would corrupt it. The shell redirect stays on the host, so the dump file is written locally and owned by your user. `port` is ignored when `container` is set. Leave `container` unset or empty when PostgreSQL is exposed on the host (for example `ports: "5432:5432"`) and use the default local dump to `127.0.0.1` and `port`. The user running the script needs passwordless sudo for `docker`.
 
-Optional `timeout` (seconds, default `300`) sets the dump timeout for that database only. Raise it for large dumps.
+Optional `timeout` (seconds, default `300`) sets the dump timeout for that MySQL or PostgreSQL database. Raise it for large dumps.
 
 Same on the distant server, don't forget to make the backup folder (whose path is `REMOTE_PATH` in the settings file) writable by the SCP user (the `REMOTE_USER` in the settings file).
 
