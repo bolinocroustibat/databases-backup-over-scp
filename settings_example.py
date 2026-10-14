@@ -9,6 +9,8 @@ POSTGRES_DEFAULT_USER = (
 POSTGRES_DEFAULT_PASSWORD = "postgres"
 POSTGRES_DEFAULT_PORT = 5432
 
+# Each entry below is an example pattern (defaults, custom port, Docker). Replace names
+# with your real database names and remove or comment out blocks you do not use.
 POSTGRES_DATABASES = {
     "db1_name": {
         "user": POSTGRES_DEFAULT_USER,
@@ -20,12 +22,14 @@ POSTGRES_DATABASES = {
         "password": "custom_password",
         "port": 5433,  # example of custom port
     },
+    # Example only — Docker PostgreSQL with no port published on the host (see README).
     "db3_name": {
         "user": "custom_user",
         "password": "custom_password",
-        # Dump with the container's pg_dump (same major version as the server,
-        # e.g. PostgreSQL 17). Omit or leave empty for a local dump to 127.0.0.1.
-        # port is ignored when container is set.
+        # PostgreSQL in Docker with no port published on the host (internal network only).
+        # Runs pg_dump inside the container; port is ignored. Also avoids a host pg_dump
+        # version mismatch (e.g. server PostgreSQL 17). Omit container for a local dump
+        # to 127.0.0.1 when the DB port is mapped on the host (e.g. 5432:5432).
         "container": "postgres17",
         # Optional timeout in seconds (default 300). Raise it for large dumps
         # such as position history with geodata.
