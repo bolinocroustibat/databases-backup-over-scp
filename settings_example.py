@@ -9,31 +9,31 @@ POSTGRES_DEFAULT_USER = (
 POSTGRES_DEFAULT_PASSWORD = "postgres"
 POSTGRES_DEFAULT_PORT = 5432
 
-# Each entry below is an example pattern (defaults, custom port, Docker). Replace names
+# Each entry below is an example pattern (defaults, custom settings, Docker). Replace names
 # with your real database names and remove or comment out blocks you do not use.
 POSTGRES_DATABASES = {
+    # Example: local PostgreSQL with the default user, password, and port.
     "db1_name": {
         "user": POSTGRES_DEFAULT_USER,
         "password": POSTGRES_DEFAULT_PASSWORD,
         "port": POSTGRES_DEFAULT_PORT,
     },
+    # Example: local PostgreSQL with a custom user, port, and dump timeout.
+    # timeout is optional, in seconds (default 300). Raise it for large dumps.
     "db2_name": {
-        "user": "custom_user",  # example of custom user for specific database
+        "user": "custom_user",
         "password": "custom_password",
-        "port": 5433,  # example of custom port
+        "port": 5433,
+        "timeout": 120,
     },
-    # Example only — Docker PostgreSQL with no port published on the host (see README).
+    # Example: Docker PostgreSQL with no port published on the host (see README).
+    # pg_dump runs inside the container; port is ignored. Also avoids a host pg_dump
+    # that is older than the server (e.g. PostgreSQL 17).
     "db3_name": {
         "user": "custom_user",
         "password": "custom_password",
-        # PostgreSQL in Docker with no port published on the host (internal network only).
-        # Runs pg_dump inside the container; port is ignored. Also avoids a host pg_dump
-        # version mismatch (e.g. server PostgreSQL 17). Omit container for a local dump
-        # to 127.0.0.1 when the DB port is mapped on the host (e.g. 5432:5432).
         "container": "postgres17",
-        # Optional timeout in seconds (default 300). Raise it for large dumps
-        # such as position history with geodata.
-        "timeout": 3600,
+        "timeout": 600,
     },
 }
 
