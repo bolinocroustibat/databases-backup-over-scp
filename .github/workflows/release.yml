@@ -18,6 +18,7 @@ permissions:
 
 jobs:
   release:
+    name: 🎉 Create GitHub release ${{ github.ref_name }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,7 +34,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Version: $VERSION"
 
-      - name: Create GitHub Release
+      - name: Create GitHub release ${{ github.ref_name }}
         uses: softprops/action-gh-release@v3
         with:
           name: v${{ steps.version.outputs.version }}
