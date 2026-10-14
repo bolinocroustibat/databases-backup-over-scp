@@ -1,62 +1,41 @@
 # Logging settings
 LOG_LEVEL = "INFO"  # Available levels: DEBUG, INFO, WARNING, ERROR, SUCCESS
 
-# PostgreSQL database details to which backup to be done.
-# Used only by backup-postgresql.py script.
-POSTGRES_DEFAULT_USER = (
-    "postgres"  # make sure this system user has enough privileges to take all databases backup.
-)
-POSTGRES_DEFAULT_PASSWORD = "postgres"
-POSTGRES_DEFAULT_PORT = 5432
+# System user that runs pg_dump via sudo for local PostgreSQL (not a Docker container).
+# This user needs enough privileges to dump every database listed below.
+POSTGRES_SYSTEM_USER = "postgres"
 
-# Each entry below is an example pattern (defaults, custom settings, Docker). Replace names
-# with your real database names and remove or comment out blocks you do not use.
+# Replace the names with your real database names and remove blocks you do not use.
 POSTGRES_DATABASES = {
-    # Example: local PostgreSQL with the default user, password, and port.
+    # Local server. user is the database role, not the system user above.
     "db1_name": {
-        "user": POSTGRES_DEFAULT_USER,
-        "password": POSTGRES_DEFAULT_PASSWORD,
-        "port": POSTGRES_DEFAULT_PORT,
+        "user": "postgres",
+        "password": "postgres",
+        "port": 5432,
     },
-    # Example: local PostgreSQL with a custom user, port, and dump timeout.
+    # Docker, no host port. pg_dump runs in the container; port is ignored.
     # timeout is optional, in seconds (default 300). Raise it for large dumps.
     "db2_name": {
-        "user": "custom_user",
-        "password": "custom_password",
-        "port": 5433,
-        "timeout": 120,
-    },
-    # Example: Docker PostgreSQL with no port published on the host (see README).
-    # pg_dump runs inside the container; port is ignored. Also avoids a host pg_dump
-    # that is older than the server (e.g. PostgreSQL 17).
-    "db3_name": {
-        "user": "custom_user",
-        "password": "custom_password",
+        "user": "postgres",
+        "password": "postgres",
         "container": "postgres17",
         "timeout": 600,
     },
 }
 
-# MySQL database details to which backup to be done.
-# Used only by backup-mysql.py script.
-MYSQL_DEFAULT_USER = (
-    ""  # make sure this MySQL user has enough privileges to take all databases backup.
-)
-MYSQL_DEFAULT_PASSWORD = ""
-MYSQL_DEFAULT_PORT = 3306
-
+# Replace the names with your real database names and remove blocks you do not use.
 MYSQL_DATABASES = {
-    # Example: local MySQL with the default user, password, and port.
+    # Local server, default port.
     "db1_name": {
-        "user": MYSQL_DEFAULT_USER,
-        "password": MYSQL_DEFAULT_PASSWORD,
-        "port": MYSQL_DEFAULT_PORT,
+        "user": "mysql_user",
+        "password": "mysql_password",
+        "port": 3306,
     },
-    # Example: custom user, port, and dump timeout.
+    # Custom port.
     # timeout is optional, in seconds (default 300). Raise it for large dumps.
     "db2_name": {
-        "user": "custom_user",
-        "password": "custom_password",
+        "user": "mysql_user",
+        "password": "mysql_password",
         "port": 3307,
         "timeout": 120,
     },

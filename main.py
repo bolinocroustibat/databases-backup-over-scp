@@ -18,7 +18,7 @@ from settings import (
     LOCAL_PATH,
     MYSQL_DATABASES,
     POSTGRES_DATABASES,
-    POSTGRES_DEFAULT_USER,
+    POSTGRES_SYSTEM_USER,
     REMOTE_HOST,
     REMOTE_PATH,
     RETENTION_DAILY_DAYS,
@@ -46,7 +46,10 @@ if local_path:
         logger.debug(f"Processing MySQL database: {db_name}")
         try:
             db_filename: str = f"{db_name}.sql.gz"
-            dump_cmd: str = f"mysqldump --user={db_config['user']} --password={db_config['password']} {db_name} | gzip -9 -c > {local_path / db_filename}"  # noqa E501
+            dump_cmd: str = (
+                f"mysqldump --user={db_config['user']} --password={db_config['password']} "
+                f"--port={db_config['port']} {db_name} | gzip -9 -c > {local_path / db_filename}"
+            )
             dump_timeout = int(db_config.get("timeout", 300))
             logger.debug(f"Running MySQL dump command for {db_name}")
             result = subprocess.run(
@@ -99,7 +102,7 @@ if local_path:
             else:
                 # Run pg_dump as the postgres system user against the local server.
                 dump_cmd = (
-                    f'sudo -u {POSTGRES_DEFAULT_USER} env PGPASSWORD="{db_config["password"]}" '
+                    f'sudo -u {POSTGRES_SYSTEM_USER} env PGPASSWORD="{db_config["password"]}" '
                     f"pg_dump {db_name} -Fc -U {db_config['user']} -h 127.0.0.1 "
                     f"-p {db_config['port']} > {dump_file}"
                 )

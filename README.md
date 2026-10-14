@@ -6,42 +6,52 @@ Python script used for MySQL/MariaDB/PostgreSQL databases backups, using Python3
 
 Create a `settings.py` file for your settings, based on `settings_example.py`, and fill in the settings according to the comments. If you don't want to save remotely, leave the `REMOTE_HOST` empty.
 
-The configuration supports individual settings for each database. You can:
-- Use default settings for all databases by setting the `*_DEFAULT_*` variables
-- Override settings for specific databases in the `*_DATABASES` dictionaries
-- Comment out databases you don't want to backup
+Each database has its own user, password, and port in `POSTGRES_DATABASES` or `MYSQL_DATABASES`.
 
-Example of database-specific configuration (placeholder names; each block shows a different pattern—keep only the entries you need, and comment out or delete the rest):
+`POSTGRES_SYSTEM_USER` is the system account used for `sudo -u` when dumping a local PostgreSQL server. It is separate from the database role in each entry.
+
+Example configuration (placeholder names; keep only the entries you need, and comment out or delete the rest):
 ```python
+POSTGRES_SYSTEM_USER = "postgres"
+
 POSTGRES_DATABASES = {
-    # Example: local PostgreSQL with the default user, password, and port.
+    # Local server. user is the database role, not the system user above.
     "db1_name": {
-        "user": POSTGRES_DEFAULT_USER,
-        "password": POSTGRES_DEFAULT_PASSWORD,
-        "port": POSTGRES_DEFAULT_PORT,
+        "user": "postgres",
+        "password": "postgres",
+        "port": 5432,
     },
-    # Example: local PostgreSQL with a custom user, port, and dump timeout.
+    # Docker, no host port. pg_dump runs in the container; port is ignored.
     # timeout is optional, in seconds (default 300). Raise it for large dumps.
     "db2_name": {
-        "user": "custom_user",
-        "password": "custom_password",
-        "port": 5433,
-        "timeout": 120,
-    },
-    # Example: Docker PostgreSQL with no port published on the host (see below).
-    # pg_dump runs inside the container; port is ignored.
-    "db3_name": {
-        "user": "custom_user",
-        "password": "custom_password",
+        "user": "postgres",
+        "password": "postgres",
         "container": "postgres17",
         "timeout": 600,
+    },
+}
+
+MYSQL_DATABASES = {
+    # Local server, default port.
+    "db1_name": {
+        "user": "mysql_user",
+        "password": "mysql_password",
+        "port": 3306,
+    },
+    # Custom port.
+    # timeout is optional, in seconds (default 300). Raise it for large dumps.
+    "db2_name": {
+        "user": "mysql_user",
+        "password": "mysql_password",
+        "port": 3307,
+        "timeout": 120,
     },
 }
 ```
 
 Don't forget to make the local directory where the dumps will be saved (whose path is `LOCAL_PATH` in the settings file) writable by the user running the script.
 
-**PostgreSQL:** the script runs as your user but executes `pg_dump` as the system user `postgres` (via `sudo -u postgres`). The dump output is piped through stdout so the resulting file is owned by your user — no special group membership is required. The user running the script only needs to be in the sudoers for the `sudo -u postgres` command.
+**PostgreSQL:** the script runs as your user but executes `pg_dump` as `POSTGRES_SYSTEM_USER` (via `sudo -u`). The dump output is piped through stdout so the resulting file is owned by your user — no special group membership is required. The user running the script only needs to be in the sudoers for that `sudo -u` command. The `user` on each database is the PostgreSQL role passed to `pg_dump -U`.
 
 **PostgreSQL in Docker:** use this when PostgreSQL runs in a container **without a port published on the host** (only reachable on Docker's internal network). Set `container` to the container name: the script runs that container's `pg_dump` with `sudo docker exec` and no `-t`, so the client talks to the server inside the container (local socket / loopback). A dump via `127.0.0.1` on the host would fail in that setup because nothing listens on the host. The container client also matches the server major version (for example PostgreSQL 17); the host `pg_dump` may be too old. Custom format (`-Fc`) is binary, and a TTY would corrupt it. The shell redirect stays on the host, so the dump file is written locally and owned by your user. `port` is ignored when `container` is set. Leave `container` unset or empty when PostgreSQL is exposed on the host (for example `ports: "5432:5432"`) and use the default local dump to `127.0.0.1` and `port`. The user running the script needs passwordless sudo for `docker`.
 
