@@ -20,6 +20,17 @@ POSTGRES_DATABASES = {
         "password": "custom_password",
         "port": 5433,  # example of custom port
     },
+    "db3_name": {
+        "user": "custom_user",
+        "password": "custom_password",
+        # Dump with the container's pg_dump (same major version as the server,
+        # e.g. PostgreSQL 17). Omit or leave empty for a local dump to 127.0.0.1.
+        # port is ignored when container is set.
+        "container": "postgres17",
+        # Optional timeout in seconds (default 300). Raise it for large dumps
+        # such as position history with geodata.
+        "timeout": 3600,
+    },
 }
 
 # MySQL database details to which backup to be done.

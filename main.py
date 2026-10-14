@@ -84,17 +84,29 @@ if local_path:
         try:
             db_filename: str = f"{db_name}.dump"
             dump_file = (local_path / db_filename).resolve()
-            # Run pg_dump as the postgres system user for DB auth; stdout is
-            # redirected by the shell so the dump file is owned by the current
-            # user (no chgrp / setgid needed on the backup folder).
-            dump_cmd: str = (
-                f'sudo -u {POSTGRES_DEFAULT_USER} env PGPASSWORD="{db_config["password"]}" '
-                f"pg_dump {db_name} -Fc -U {db_config['user']} -h 127.0.0.1 -p {db_config['port']} > {dump_file}"
-            )
+            # stdout is redirected by the shell so the dump file is owned by the
+            # current user (no chgrp / setgid needed on the backup folder).
+            container = db_config.get("container")
+            if container:
+                # pg_dump inside the container matches the server major version.
+                # No -t: a TTY corrupts custom-format (-Fc) binary output.
+                # The redirect stays on the host so the file is written locally.
+                dump_cmd = (
+                    f'sudo docker exec -e PGPASSWORD="{db_config["password"]}" {container} '
+                    f"pg_dump -Fc -U {db_config['user']} -d {db_name} > {dump_file}"
+                )
+            else:
+                # Run pg_dump as the postgres system user against the local server.
+                dump_cmd = (
+                    f'sudo -u {POSTGRES_DEFAULT_USER} env PGPASSWORD="{db_config["password"]}" '
+                    f"pg_dump {db_name} -Fc -U {db_config['user']} -h 127.0.0.1 "
+                    f"-p {db_config['port']} > {dump_file}"
+                )
+            dump_timeout = int(db_config.get("timeout", 300))
             logger.debug(f"Running PostgreSQL dump command for {db_name}")
             result = subprocess.run(
-                dump_cmd, shell=True, capture_output=True, text=True, timeout=300
-            )  # 5 minutes timeout
+                dump_cmd, shell=True, capture_output=True, text=True, timeout=dump_timeout
+            )
 
             if result.returncode != 0:
                 logger.error(

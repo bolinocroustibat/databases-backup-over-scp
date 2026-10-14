@@ -24,12 +24,22 @@ POSTGRES_DATABASES = {
         "password": "custom_password",
         "port": 5433,  # custom port
     },
+    "db3_name": {
+        "user": "custom_user",
+        "password": "custom_password",
+        "container": "postgres17",  # dump inside this container; port is ignored
+        "timeout": 3600,  # seconds; default 300
+    },
 }
 ```
 
 Don't forget to make the local directory where the dumps will be saved (whose path is `LOCAL_PATH` in the settings file) writable by the user running the script.
 
 **PostgreSQL:** the script runs as your user but executes `pg_dump` as the system user `postgres` (via `sudo -u postgres`). The dump output is piped through stdout so the resulting file is owned by your user — no special group membership is required. The user running the script only needs to be in the sudoers for the `sudo -u postgres` command.
+
+**PostgreSQL in Docker:** if an entry sets `container` to a container name, the script runs that container's `pg_dump` with `sudo docker exec` and no `-t`. The container client matches the server major version (for example PostgreSQL 17); the host `pg_dump` may be too old. Custom format (`-Fc`) is binary, and a TTY would corrupt it. The shell redirect stays on the host, so the dump file is written locally and owned by your user. `port` is ignored: `pg_dump` connects through the container's local socket. Leave `container` unset or empty to keep the local dump to `127.0.0.1`. The user running the script needs passwordless sudo for `docker`.
+
+Optional `timeout` (seconds, default `300`) sets the dump timeout for that database only. Raise it for large dumps, such as position history with geodata (`3600` for one hour).
 
 Same on the distant server, don't forget to make the backup folder (whose path is `REMOTE_PATH` in the settings file) writable by the SCP user (the `REMOTE_USER` in the settings file).
 
